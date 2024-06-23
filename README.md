@@ -265,3 +265,173 @@ HashiCorp Configuration Language (HCL) is integral to defining infrastructure as
 `terraform destroy`
    - Purpose: Destroys all resources managed by Terraform for a given configuration.
    - Action: Safely decommissions and deletes resources provisioned by Terraform.
+
+## Variables 
+Using variables in Terraform allows you to parameterize your configurations and make them more flexible and reusable. Variables can be defined and used throughout your Terraform configuration files to customize resource settings, inputs, and outputs. 
+
+### Ways to Declare Variables in Terraform
+1. Inline Variable Declaration: Variables can be defined directly within the Terraform configuration files using the variable block.
+
+```hcl
+variable "region" {
+  description = "AWS region where resources will be provisioned"
+  default     = "us-east-1"
+}
+```
+2. Variable Definitions File (terraform.tfvars): You can create a file named terraform.tfvars (or any file ending in .auto.tfvars) to define variables. Terraform automatically loads values from this file if it exists in the current directory.
+
+`region = "us-east-1"`
+
+3. Environment Variables: Terraform automatically reads environment variables prefixed with TF_VAR_ to set variable values.
+   
+`export TF_VAR_region="us-east-1"`
+
+4. Command-Line Flags: You can set variables directly from the command line using the -var option when running terraform plan or terraform apply.
+
+`terraform plan -var="region=us-east-1"`
+
+5. Variable Files (*.tfvars): You can create separate .tfvars files and specify them using -var-file option during terraform plan or terraform apply.
+
+`terraform plan -var-file="variables.tfvars"`
+
+
+## Resource Attributes
+Resource Attributes typically refer to the properties or characteristics of a resource that can be referenced or used within other parts of the configuration. These attributes are usually accessed using interpolation syntax ${}.
+
+```hcl
+variable "filename" {
+  description = "File location for the local file resource"
+}
+resource "local_file" "pet" {
+  filename = var.filename
+  content  = "My favorite pet is ${random_pet.my-pet.id}"
+}
+
+resource "random_pet" "my-pet" {
+  prefix    = var.prefix
+  separator = var.separator
+  length    = var.length
+}
+
+```
+
+## Resource dependencies
+
+In Terraform, resource dependencies define the order in which resources are created, updated, or deleted. Dependencies ensure that Terraform provisions resources in the correct sequence based on relationships defined between them. There are primarily two types of dependencies: implicit and explicit dependencies.
+
+1. Implicit Dependencies
+Implicit dependencies are automatically inferred by Terraform based on the resource attributes referenced in the configuration. Terraform uses these references to establish the order of operations during the apply phase.
+
+```hcl
+# Define a VPC
+resource "aws_vpc" "example_vpc" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
+
+  tags = {
+    Name = "ExampleVPC"
+  }
+}
+
+# Define a subnet within the VPC
+resource "aws_subnet" "example_subnet" {
+  vpc_id            = aws_vpc.example_vpc.id  # Implicit dependency on aws_vpc.example_vpc
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-west-2a"
+
+  tags = {
+    Name = "ExampleSubnet"
+  }
+}
+```
+Explanation:
+
+- In the example above, aws_subnet.example_subnet implicitly depends on aws_vpc.example_vpc. This is because the vpc_id attribute of aws_subnet.example_subnet references aws_vpc.example_vpc.id.
+
+- During the apply phase, Terraform recognizes that the subnet cannot be created until the VPC exists. Therefore, it creates the VPC first and then proceeds to create the subnet within that VPC
+
+2.  Explicit Dependencies
+Explicit dependencies are specified using the depends_on meta-argument within a resource block. This allows you to explicitly declare dependencies between resources that Terraform cannot infer automatically.
+
+```hcl
+# Define the AWS provider
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Create a VPC
+resource "aws_vpc" "example_vpc" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
+
+  tags = {
+    Name = "ExampleVPC"
+  }
+}
+
+# Create an EC2 instance that depends on the VPC
+resource "aws_instance" "example_instance" {
+  ami           = "ami-12345678"
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.example_subnet.id  # Implicit dependency on subnet
+
+  tags = {
+    Name = "ExampleInstance"
+  }
+
+  depends_on = [aws_vpc.example_vpc]  # Explicit dependency on VPC
+}
+
+# Create a subnet within the VPC
+resource "aws_subnet" "example_subnet" {
+  vpc_id            = aws_vpc.example_vpc.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "ExampleSubnet"
+  }
+}
+
+```
+Explainations:
+- depends_on: The depends_on argument is used explicitly on the aws_instance.example_instance resource to denote that it should wait for the creation of aws_vpc.example_vpc before proceeding. This ensures that the VPC is fully created before attempting to create the instance.
+
+## Output Variables
+Output variables in Terraform allow you to expose certain values from your infrastructure deployment that you may need to reference or use in other configurations or scripts. Here's how you can define and use output variables in Terraform.
+
+```hcl
+variable "filename" {
+  description = "File location for the local file resource"
+}
+
+variable "prefix" {
+  description = "Prefix for generating random pet name"
+}
+
+variable "separator" {
+  description = "Separator for generating random pet name"
+}
+
+variable "length" {
+  description = "Length of the random pet name"
+}
+
+resource "local_file" "pet" {
+  filename = var.filename
+  content  = "My favorite pet is ${random_pet.my-pet.id}"
+}
+
+resource "random_pet" "my-pet" {
+  prefix    = var.prefix
+  separator = var.separator
+  length    = var.length
+}
+
+output "pet_name" {
+  value = random_pet.my-pet.id
+}
+```
+
+Explanation: 
+- Output Variable (main.tf) output "pet_name": Defines an output variable named "pet_name" that retrieves the id attribute from the random_pet.my-pet resource. This allows you to retrieve and use this value after Terraform applies the configuration.
