@@ -1,0 +1,18 @@
+
+# resource "time_static" "time_update" {
+# }
+# resource "local_file" "time" {
+#   filename = "/home/nasir/time.txt"
+#   content = "Time stamp of this file is ${time_static.time_update.id}"
+
+#  }
+
+resource "local_file" "time" {
+  filename = "/home/nasir/time.txt"
+  content = "Time stamp of this file is ${formatdate("YYYY-MM-DD HH:mm:ss", timestamp())}\n"
+}
+
+output "timestamp_output" {
+  value = local_file.time.content
+}
+

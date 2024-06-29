@@ -1,0 +1,39 @@
+# A Terraform provider is a plugin that enables Terraform to interact with a specific set of APIs. In Terraform, providers are responsible for understanding API interactions and exposing resources that can be managed.
+
+# Configure the AWS Provider
+provider "aws" {
+  region     = "us-east-2"
+  access_key = "AKIA55YG4GDZNLDCVEVV"
+  secret_key = "qqaRdyLWE61ln3chwrdq"
+}
+
+# Explanation: This block configures Terraform to use the official Linode provider from the Terraform Registry. It specifies version 1.13.3 of the Linode provider that should be used.
+
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  
+  tags = {
+    Name = "MainVPC"
+  }
+}
+
+resource "aws_subnet" "subnet1" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"  # Specify the CIDR block for the subnet within the VPC
+  
+  tags = {
+    Name = "Subnet1"
+  }
+}
+
+
+resource "aws_instance" "ubuntu-machine" {
+  ami           = "ami-09040d770ffe2224f"  # Replace with your desired AMI ID
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.subnet1.id
+  
+  tags = {
+    Name = "UbuntuInstance"
+  }
+}
