@@ -3,8 +3,6 @@
 # Configure the AWS Provider
 provider "aws" {
   region     = "us-east-2"
-  access_key = "AKIA55YG4GDZNLDCVEVV"
-  secret_key = "qqaRdyLWE61ln3chwrdq"
 }
 
 # Explanation: This block configures Terraform to use the official Linode provider from the Terraform Registry. It specifies version 1.13.3 of the Linode provider that should be used.
