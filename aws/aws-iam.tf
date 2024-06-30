@@ -1,8 +1,6 @@
-provider "aws" {
-  region     = "us-east-2"
-}
+
 resource "aws_iam_user" "admin-user" {
-    name = "nasir2"
+    name = "anim"
     tags = {
       description = "Technical Team Lead"
     }
@@ -10,18 +8,7 @@ resource "aws_iam_user" "admin-user" {
 resource "aws_iam_policy" "policy" {
   name        = "admin-policy"
   description = "A admin policy"
-  policy      = <<EOF
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": "*",
-                "Resource": "*"
-            }
-        ]
-    }
-    EOF
+  policy      = file("admin-policy.json")
 }
 resource "aws_iam_user_policy_attachment" "nasir-admin-attach" {
   user       = aws_iam_user.admin-user.name
