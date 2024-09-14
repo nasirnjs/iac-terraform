@@ -202,6 +202,13 @@ Each type of IaC tool offers unique advantages and capabilities suited to differ
         value = aws_instance.example.id
       }
       ```
+Basic format of the terraform configuration file main.tf looks like this.
+<p align="center">
+  <img src="./image/terraform-basic.webp" alt="Basic format of the terraform configuration file" title="Basic format of the terraform configuration file " height="400" width="800"/>
+  <br/>
+  Pic: Basic format of the terraform configuration file 
+</p>
+
 
 Summary:
 
