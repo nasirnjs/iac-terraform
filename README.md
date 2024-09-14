@@ -204,7 +204,7 @@ Each type of IaC tool offers unique advantages and capabilities suited to differ
       ```
 Basic format of the terraform configuration file main.tf looks like this.
 <p align="center">
-  <img src="./image/terraform-basic.webp" alt="Basic format of the terraform configuration file" title="Basic format of the terraform configuration file " height="400" width="800"/>
+  <img src="./image/tf-basic.png" alt="Basic format of the terraform configuration file" title="Basic format of the terraform configuration file " height="400" width="800"/>
   <br/>
   Pic: Basic format of the terraform configuration file 
 </p>
