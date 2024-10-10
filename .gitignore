@@ -1,5 +1,5 @@
 .terraform*
-terraform*
+#terraform*
 *.bar
 aws/.terraform*
 0-basic-1/.terraform*
