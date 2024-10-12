@@ -44,21 +44,4 @@ resource "google_compute_firewall" "gke_firewall" {
   network        = google_compute_network.gke_vpc.id
 }
 
-/*
-# Firewall 
-resource "google_compute_firewall" "gke_firewall" {
-  name    = "gke-firewall"
-  allow {
-    protocol = "icmp"
-  }
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "22"]
-  }
-  source_tags = ["web ssh"]
-  direction = "INGRESS"
-  source_ranges = ["0.0.0.0/0"]
-  network = google_compute_network.gke_vpc.id
-}
-*/
 
