@@ -84,3 +84,17 @@ variable "max_separate_node_count" {
   description = "Maximum nodes in the separate node pool"
   type        = number
 }
+
+# Image type for the primary node pool
+variable "primary_image_type" {
+  description = "The image type to use for the primary GKE nodes (e.g., COS_CONTAINERD, UBUNTU, etc.)"
+  type        = string
+  default     = "COS_CONTAINERD"
+}
+
+# Image type for the secondary node pool
+variable "separate_image_type" {
+  description = "The image type to use for the secondary GKE nodes (e.g., COS_CONTAINERD, UBUNTU, etc.)"
+  type        = string
+  default     = "COS_CONTAINERD"
+}

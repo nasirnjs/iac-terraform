@@ -92,3 +92,12 @@ variable "environment" {
   description = "The environment for the GKE cluster (e.g., dev, prod)"
   type        = string
 }
+variable "primary_image_type" {
+  description = "Primary node pool image type"
+  type        = string
+}
+
+variable "separate_image_type" {
+  description = "Separate node pool image type"
+  type        = string
+}

@@ -27,6 +27,7 @@ module "gke" {
   primary_disk_type       = var.disk_type
   min_primary_node_count  = var.min_primary_node_count
   max_primary_node_count  = var.max_primary_node_count
+  primary_image_type  = var.primary_image_type
 
   # For separate node pool
   separate_machine_type   = var.separate_machine_type
@@ -34,4 +35,6 @@ module "gke" {
   separate_disk_type      = var.separate_disk_type
   min_separate_node_count = var.min_separate_node_count
   max_separate_node_count = var.max_separate_node_count
+  separate_image_type = var.separate_image_type
+
 }
