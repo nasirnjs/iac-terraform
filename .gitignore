@@ -1,4 +1,7 @@
-**.terraform.tfstate.*
-**.terraform.tfstate.lock.info
-**.terraform/
-**.terraform.lock.hcl
+# Ignore Terraform state files and backup files
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/.terraform
+**/*.tfstate.lock.info
+**/.terraform.lock.hcl
+
