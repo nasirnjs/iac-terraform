@@ -24,7 +24,7 @@ resource "aws_internet_gateway" "buddy_igw" {
 # private subnet 1
 resource "aws_subnet" "buddy_subnet_private_zone1" {
   vpc_id            = aws_vpc.buddy_vpc.id
-  cidr_block        = var.subnet_private-1_cidr
+  cidr_block        = var.subnet_private_1_cidr
   availability_zone = "${var.aws_region}a"
   tags = {
     Name       = format("%s private_1", var.cluster_name)
@@ -37,7 +37,7 @@ resource "aws_subnet" "buddy_subnet_private_zone1" {
 # private subnet 2
 resource "aws_subnet" "buddy_subnet_private_zone2" {
   vpc_id            = aws_vpc.buddy_vpc.id
-  cidr_block        = var.subnet_private-2_cidr
+  cidr_block        = var.subnet_private_2_cidr
   availability_zone = "${var.aws_region}b"
   tags = {
     Name       = format("%s private_2", var.cluster_name)
@@ -50,7 +50,7 @@ resource "aws_subnet" "buddy_subnet_private_zone2" {
 #public subnet 1
 resource "aws_subnet" "buddy_subnet_public_zone1" {
   vpc_id            = aws_vpc.buddy_vpc.id
-  cidr_block        = var.subnet_public-1_cidr
+  cidr_block        = var.subnet_public_1_cidr
   availability_zone = "${var.aws_region}a"
   tags = {
     Name                        = format("%s public_1", var.cluster_name)
@@ -64,7 +64,7 @@ resource "aws_subnet" "buddy_subnet_public_zone1" {
 #public subnet 2
 resource "aws_subnet" "buddy_subnet_public_zone2" {
   vpc_id            = aws_vpc.buddy_vpc.id
-  cidr_block        = var.subnet_public-2_cidr
+  cidr_block        = var.subnet_public_2_cidr
   availability_zone = "${var.aws_region}b"
   tags = {
     Name                        = format("%s public_2", var.cluster_name)

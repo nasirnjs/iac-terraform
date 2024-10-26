@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "The AWS region to deploy resources in"
+  description = "your aws region"
   type        = string
 }
 variable "cluster_name" {
@@ -7,40 +7,44 @@ variable "cluster_name" {
   type        = string
 }
 variable "created_by" {
-  description = "created by Instance metadata"
+  description = "created by xyz metadata"
   type        = string
 }
 # variable "k8s_version" {
-#   description = "k8s version"
+#   description = "k8s_version"
 #   type        = string
 # }
 variable "vpc_cidr_block" {
-  type    = string
-}
-variable "subnet_private_1_cidr" {
-  description = "cidr range of the private subnet 1"
+  description = "cidr range of the VPC"
   type        = string
 }
-variable "subnet_private_2_cidr" {
-  description = "cidr range of the private subnet 1"
-  type        = string
+# variable "subnet_private_1_cidr" {
+#   description = "k8s_version"
+#   type        = string
+# }
+# variable "subnet_private_2_cidr" {
+#   description = "k8s_version"
+#   type        = string
+# }
+# this from vpc modules outputs.tf
+variable "subnet_id_private_1" {
+  description = "subnet_id_pprivate_1 to be used in cluster"
+  type = string
 }
-variable "subnet_public_1_cidr" {
-  description = "cidr range of the private subnet 1"
-  type        = string
+variable "subnet_id_private_2" {
+  description = "subnet_id_pprivate_1 to be used in cluster"
+  type = string
 }
-variable "subnet_public_2_cidr" {
-  description = "cidr range of the private subnet 1"
-  type        = string
-}
+
 variable "capacity_type" {
   description = "capacity type"
   type        = string
 }
 variable "instance_types" {
-  description = "Instance types for the EKS node group (e.g., t3.large)"
+  description = "List of instance types for the EKS node group"
   type        = list(string)
 }
+
 variable "node_group_desired_size" {
   description = "Desired number of nodes in the EKS node group"
   type        = number
