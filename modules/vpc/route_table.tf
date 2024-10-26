@@ -65,7 +65,7 @@ resource "aws_route_table_association" "secondary-private" {
 }
 
 resource "aws_route_table_association" "secondary-public" {
-  count = var.enable_secondary_cidr ? var.subnet_count : 0
+  count          = var.enable_secondary_cidr ? var.subnet_count : 0
   route_table_id = aws_route_table.public.id
   subnet_id      = aws_subnet.secondary-public[count.index].id
 }

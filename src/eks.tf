@@ -31,6 +31,9 @@ module "eks" {
       min_size     = 2
       max_size     = 10
       desired_size = 2
+      iam_role_additional_policies = {
+        AmazonS3ReadOnlyAccess = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+      }
     }
   }
 

@@ -20,7 +20,7 @@ resource "aws_subnet" "public" {
 
 resource "aws_subnet" "private" {
   depends_on = [aws_vpc_ipv4_cidr_block_association.secondary]
-  
+
   for_each          = var.private_subnets
   cidr_block        = each.key
   availability_zone = "${data.aws_region.current.name}${lookup(each.value, "az")}"
@@ -31,11 +31,11 @@ resource "aws_subnet" "private" {
   }
 
   tags = {
-    Name                                                              = "${local.resource_name_prefix}-private-${lookup(each.value, "az")}"
-    Environment                                                       = var.project_info[0]
-    ResourceType                                                      = "SUBNET"
-    Developer                                                         = var.project_info[1]
-    "kubernetes.io/cluster/${local.resource_name_prefix}-cluster"     = "shared" //TODO: Remove dependency
+    Name                                                          = "${local.resource_name_prefix}-private-${lookup(each.value, "az")}"
+    Environment                                                   = var.project_info[0]
+    ResourceType                                                  = "SUBNET"
+    Developer                                                     = var.project_info[1]
+    "kubernetes.io/cluster/${local.resource_name_prefix}-cluster" = "shared" //TODO: Remove dependency
   }
 }
 
