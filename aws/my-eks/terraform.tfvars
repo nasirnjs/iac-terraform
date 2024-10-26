@@ -1,8 +1,0 @@
-aws_region = "us-east-1"
-cluster_name = "buddy-cluster"
-created_by   = "nasir"
-vpc_cidr_block = "12.0.0.0/16"
-subnet_private-1_cidr = "12.0.1.0/24"
-subnet_private-2_cidr = "12.0.2.0/24"
-subnet_public-1_cidr = "12.0.3.0/24"
-subnet_public-2_cidr = "12.0.4.0/24"
