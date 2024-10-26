@@ -53,3 +53,12 @@ variable "node_group_max_size" {
   description = "Desired number of nodes in the EKS node group"
   type        = number
 }
+## bastion host
+variable "ami_id" {
+  description = "AMI ID of your EC2 instance"
+  type        = string
+}
+variable "bastion_host_ec2_size" {
+  description = "Your bastion host EC2 instance size"
+  type        = string
+}

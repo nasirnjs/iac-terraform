@@ -24,6 +24,17 @@ module "VPC" {
 
 }
 
+module "bastion_host" {
+  source                = "../../modules/bastion-host"
+  cluster_name          = var.cluster_name
+  created_by            = var.created_by
+  aws_region            = var.aws_region
+  bastion_host_ec2_size = var.bastion_host_ec2_size
+  bh_vpc                = module.VPC.vpc_name
+  bh_subnet             = module.VPC.subnet_id-public_1.id
+  ami_id                = var.ami_id
+}
+
 module "eks" {
   source = "../../modules/eks"
   aws_region        = var.aws_region

@@ -31,6 +31,10 @@ resource "aws_iam_role_policy_attachment" "private_node-AmazonEBSCSIDriverPolicy
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   role       = aws_iam_role.private_node_group_role.name
 }
+resource "aws_iam_role_policy_attachment" "private_node_AmazonEC2FullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  role       = aws_iam_role.private_node_group_role.name
+}
 
 # private node group
 resource "aws_eks_node_group" "memory_optimize_group1" {
