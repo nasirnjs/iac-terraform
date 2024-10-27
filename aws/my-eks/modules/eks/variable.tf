@@ -27,6 +27,7 @@ variable "vpc_cidr_block" {
 #   type        = string
 # }
 # this from vpc modules outputs.tf
+
 variable "subnet_id_private_1" {
   description = "subnet_id_pprivate_1 to be used in cluster"
   type = string
@@ -56,4 +57,9 @@ variable "node_group_min_size" {
 variable "node_group_max_size" {
   description = "Desired number of nodes in the EKS node group"
   type        = number
+}
+# bastion host
+variable "bastion_host_role_arn" {
+  description = "module.bastion_host.bh_role.arn"
+  type = string
 }

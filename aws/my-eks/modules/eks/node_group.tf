@@ -17,28 +17,30 @@ resource "aws_iam_role_policy_attachment" "private_node-AmazonEKSWorkerNodePolic
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.private_node_group_role.name
 }
-
 resource "aws_iam_role_policy_attachment" "private_node-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.private_node_group_role.name
 }
-
 resource "aws_iam_role_policy_attachment" "private_node-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.private_node_group_role.name
 }
-resource "aws_iam_role_policy_attachment" "private_node-AmazonEBSCSIDriverPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  role       = aws_iam_role.private_node_group_role.name
-}
-resource "aws_iam_role_policy_attachment" "private_node_AmazonEC2FullAccess" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
-  role       = aws_iam_role.private_node_group_role.name
-}
+# resource "aws_iam_role_policy_attachment" "private_node-AmazonEBSCSIDriverPolicy" {
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+#   role       = aws_iam_role.private_node_group_role.name
+# }
+# resource "aws_iam_role_policy_attachment" "private_node_AmazonEC2FullAccess" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+#   role       = aws_iam_role.private_node_group_role.name
+# }
 
 # private node group
 resource "aws_eks_node_group" "memory_optimize_group1" {
   cluster_name    = aws_eks_cluster.buddy_eks.name
+  tags = {
+    Name       = format("%s-nodegroup", var.cluster_name)
+    created_by = var.created_by
+  }
   node_group_name = format("%s-private_node_group1", var.cluster_name)
   node_role_arn   = aws_iam_role.private_node_group_role.arn
   subnet_ids      = [
@@ -65,7 +67,7 @@ resource "aws_eks_node_group" "memory_optimize_group1" {
     aws_iam_role_policy_attachment.private_node-AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.private_node-AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.private_node-AmazonEC2ContainerRegistryReadOnly,
-    aws_iam_role_policy_attachment.private_node-AmazonEBSCSIDriverPolicy,
+   # aws_iam_role_policy_attachment.private_node-AmazonEBSCSIDriverPolicy,
     aws_eks_cluster.buddy_eks
   ]
 

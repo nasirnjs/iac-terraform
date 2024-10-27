@@ -27,7 +27,6 @@ resource "aws_iam_role_policy_attachment" "buddy-eks-AmazonEKSClusterPolicy" {
 
 resource "aws_eks_cluster" "buddy_eks" {
   name     = var.cluster_name
-  #version  = var.k8s_version
   role_arn = aws_iam_role.buddy-eks-role.arn
 
   vpc_config {

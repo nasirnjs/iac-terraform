@@ -6,7 +6,6 @@ subnet_private_1_cidr = "12.0.1.0/24"
 subnet_private_2_cidr = "12.0.2.0/24"
 subnet_public_1_cidr = "12.0.3.0/24"
 subnet_public_2_cidr = "12.0.4.0/24"
-#k8s_version = "1.30.0"
 capacity_type       = "ON_DEMAND"
 node_group_min_size     = 1
 node_group_max_size     = 10
@@ -14,4 +13,4 @@ node_group_desired_size = 2
 instance_types          = ["t2.medium"]
 # bastion-host
 ami_id                  = "ami-005fc0f236362e99f"
-bastion_host_ec2_size = "t2.medium"
+bastion_host_ec2_size   = "t2.medium"
