@@ -43,3 +43,32 @@ Note:
 }
 
 ```
+
+# Horizontal Pod Autoscaler (HPA)
+Amazon Elastic Kubernetes Service (EKS) automatically scales the number of pods in a deployment or replica set based on observed CPU/memory utilization or custom metrics. Here’s a step-by-step guide to configure HPA in an EKS cluster
+
+Steps 1: Install Metrics Server: HPA relies on metrics like CPU and memory, which the Kubernetes Metrics Server provides. If it’s not already installed, deploy it.\
+`kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
+
+
+Steps 2: To confirm that Metrics Server is running, run the following command.\
+`kubectl get pods -n kube-system -l k8s-app=metrics-server`
+
+# Test HPA (Horizontal Pod Autoscaler)
+To test the Horizontal Pod Autoscaler (HPA), you can generate load on the php-apache service by simulating traffic. Here’s a method to do this from within the cluster using a busy loop and also using an external load-testing tool if you’re working from outside the cluster.
+
+Run a Load Generator Pod: Use a BusyBox pod that repeatedly makes requests to the php-apache service.\
+`kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh`
+
+Run a Loop to Generate Requests: Once inside the BusyBox shell, use wget in a loop to hit the service and create CPU load.\
+`while true; do wget -q -O- http://php-apache-service.default.svc.cluster.local; done`
+
+Monitor HPA: In another terminal, watch the HPA scaling.\
+`kubectl get hpa -w`
+
+
+If you want to see the top pods based on CPU.\
+`kubectl top pods --sort-by cpu -A`
+
+And to see the top pods based on memory usage.\
+`kubectl top pods --sort-by memory`

@@ -54,7 +54,7 @@ resource "aws_subnet" "buddy_subnet_public_zone1" {
   availability_zone = "${var.aws_region}a"
   tags = {
     Name                        = format("%s public_1", var.cluster_name)
-    #"kubernetes.io/role/elb"    = "1"
+    "kubernetes.io/role/elb"    = "1"
     created_by                  = var.created_by
 
   }
@@ -68,7 +68,7 @@ resource "aws_subnet" "buddy_subnet_public_zone2" {
   availability_zone = "${var.aws_region}b"
   tags = {
     Name                        = format("%s public_2", var.cluster_name)
-    #"kubernetes.io/role/elb"    = "1"
+    "kubernetes.io/role/elb"    = "1"
     created_by                  = var.created_by
 
   }
