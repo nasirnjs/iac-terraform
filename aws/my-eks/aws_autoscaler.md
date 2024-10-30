@@ -3,6 +3,7 @@ Update a kubeconfig file for your cluster Replace region-code with the AWS Regio
 `aws eks --region us-east-1 update-kubeconfig --name buddy-cluster`
 
 
+# EKS Cluster Autoscaller
 
 ## Steps 1:  Create Autoscaler Features Policy
 [cluster-auto-scaler-json Policy](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md)
