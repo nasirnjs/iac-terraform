@@ -20,3 +20,7 @@ output "subnet_id-public_1" {
 output "subnet-id-public_2" {
   value = aws_subnet.buddy_subnet_public_zone2
 }
+output "vpc_id" {
+  value = aws_vpc.buddy_vpc.id
+  description = "The ID of the VPC"
+}

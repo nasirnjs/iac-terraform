@@ -5,3 +5,6 @@ output "bh_role" {
 output "bh_instance" {
   value = aws_instance.bh_instance
 }
+output "aws_sg_ssh" {
+  value = aws_security_group.allow_ssh.id
+}

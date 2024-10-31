@@ -63,3 +63,12 @@ variable "bastion_host_role_arn" {
   description = "module.bastion_host.bh_role.arn"
   type = string
 }
+variable "aws_sg_ssh" {
+  description = "Bastion host security group ID"
+  type        = string
+}
+
+variable "bh_vpc_id" {
+  description = "VPC ID for bastion host"
+  type        = string
+}

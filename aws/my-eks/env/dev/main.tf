@@ -11,7 +11,7 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
-module "VPC" {
+module "vpc" {
     source = "../../modules/vpc"
     cluster_name = var.cluster_name
     created_by = var.created_by
@@ -30,23 +30,25 @@ module "bastion_host" {
   created_by            = var.created_by
   aws_region            = var.aws_region
   bastion_host_ec2_size = var.bastion_host_ec2_size
-  bh_vpc                = module.VPC.vpc_name
-  bh_subnet             = module.VPC.subnet_id-public_1.id
+  bh_vpc                = module.vpc.vpc_name
+  bh_subnet             = module.vpc.subnet_id-public_1.id
   ami_id                = var.ami_id
 }
 
 module "eks" {
   source = "../../modules/eks"
-  aws_region        = var.aws_region
-  vpc_cidr_block  = module.VPC.vpc_cidr_block
-  cluster_name      = var.cluster_name
-  created_by        = var.created_by
-  subnet_id_private_1 = module.VPC.subnet_private_1.id
-  subnet_id_private_2 = module.VPC.subnet_private_2.id
+  aws_region              = var.aws_region
+  vpc_cidr_block          = module.vpc.vpc_cidr_block
+  cluster_name            = var.cluster_name
+  created_by              = var.created_by
+  subnet_id_private_1     = module.vpc.subnet_private_1.id
+  subnet_id_private_2     = module.vpc.subnet_private_2.id
   node_group_desired_size = var.node_group_desired_size
   node_group_min_size     = var.node_group_min_size
   node_group_max_size     = var.node_group_max_size
   capacity_type           = var.capacity_type
   instance_types          = var.instance_types
-  bastion_host_role_arn = module.bastion_host.bh_role.arn
+  bastion_host_role_arn   = module.bastion_host.bh_role.arn
+  aws_sg_ssh              = module.bastion_host.aws_sg_ssh
+  bh_vpc_id               = module.vpc.vpc_id
 }
