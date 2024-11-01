@@ -4,23 +4,15 @@ Update a kubeconfig file for your cluster Replace region-code with the AWS Regio
 
 
 
-
-## Create json Policy
+## Steps 1:  Create Autoscaler Features Policy
 [cluster-auto-scaler-json Policy](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md)
 
 
-
-
-## Create custom trusted role and attach policy
+## Steps 2: Create custom trusted role and attach Autoscaler policy
 EKS cluster manifest file from [Here](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml)
 
-Note:
-    - during create cluster role select your actual cluster oidc
-    - registry.k8s.io/autoscaling/cluster-autoscaler:**v1.31** #change your k8s version
-    - annotations:
-        eks.amazonaws.com/role-arn: arn:aws:iam::xxxxx:role/Amazon_CA_role   # Add the IAM role created in  section. [Ref](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/CA_with_AWS_IAM_OIDC.md)
 
-## Eid role trusted relationship
+## Eid role trusted relationship Example
 
 ```sh
 {
@@ -43,6 +35,19 @@ Note:
 }
 
 ```
+
+**Note:**
+    - during create cluster role select your actual cluster currect oidc
+    - registry.k8s.io/autoscaling/cluster-autoscaler:**v1.31** #change your k8s version
+    - annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::xxxxx:role/cluster_autoscaler_role_just_now_you_created
+
+## Apply menifest file 
+
+`kubectl apply -f eks_cluster_autoscaler.yam`
+
+[References](https://www.youtube.com/watch?v=__3O1Tk-26s)
+
 
 # Horizontal Pod Autoscaler (HPA)
 Amazon Elastic Kubernetes Service (EKS) automatically scales the number of pods in a deployment or replica set based on observed CPU/memory utilization or custom metrics. Here’s a step-by-step guide to configure HPA in an EKS cluster
