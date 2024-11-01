@@ -57,7 +57,7 @@ resource "aws_eks_cluster" "buddy_eks" {
   vpc_config {
     security_group_ids      = [aws_security_group.allow_sg_bh.id]
     endpoint_private_access = true
-    endpoint_public_access  = false
+    endpoint_public_access  = true
 
     subnet_ids = [
       var.subnet_id_private_1,
