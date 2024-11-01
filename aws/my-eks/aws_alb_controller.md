@@ -8,7 +8,8 @@ IAM policy for the AWS Load Balancer Controller from [Here](curl -o iam-policy.j
 
 ## Steps 2: Create Role for Load Balancer Controller
 Create IAM role for Load Balancer Controller and attached IAM policy, that you have created on *Steps 1*
-Note: role should be *Web identity* and select your cluster oidc and Identity provider should be *sts.amazonaws.com*
+
+**Note:** role should be *Web identity* and select your cluster oidc and Identity provider should be *sts.amazonaws.com*
 
 
 
