@@ -46,6 +46,7 @@ module "eks" {
   node_group_desired_size = var.node_group_desired_size
   node_group_min_size     = var.node_group_min_size
   node_group_max_size     = var.node_group_max_size
+  max_unavailable         = var.max_unavailable
   capacity_type           = var.capacity_type
   instance_types          = var.instance_types
   bastion_host_role_arn   = module.bastion_host.bh_role.arn

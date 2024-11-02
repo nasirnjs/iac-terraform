@@ -62,3 +62,9 @@ variable "bastion_host_ec2_size" {
   description = "Your bastion host EC2 instance size"
   type        = string
 }
+##
+variable "max_unavailable" {
+  description = "Maximum number of nodes that can be unavailable during update"
+  type        = number
+  #default     = 1
+}

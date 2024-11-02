@@ -72,3 +72,9 @@ variable "bh_vpc_id" {
   description = "VPC ID for bastion host"
   type        = string
 }
+##
+variable "max_unavailable" {
+  description = "Maximum number of nodes that can be unavailable during update"
+  type        = number
+  #default     = 1
+}
