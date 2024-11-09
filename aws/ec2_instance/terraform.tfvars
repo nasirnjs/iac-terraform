@@ -1,0 +1,5 @@
+
+environment = "dev"
+created_by = "admin"
+vpc_cidr_block = "110.0.0.0/16"
+subnet_cidr_block = "110.0.1.0/24"
