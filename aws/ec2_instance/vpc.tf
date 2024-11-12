@@ -19,7 +19,7 @@ resource "aws_internet_gateway" "ec2_igw" {
 # Create a public subnet within the VPC
 resource "aws_subnet" "ec2_public_subnet" {
   vpc_id                  = aws_vpc.ec2_vpc.id
-  cidr_block              = var.subnet_cidr_block
+  cidr_block              = var.public_subnet_cidr_block
   #map_public_ip_on_launch = true
 
   tags = {
@@ -27,6 +27,18 @@ resource "aws_subnet" "ec2_public_subnet" {
     Environment = var.environment
   }
 }
+
+# Create a privare subnet within the VPC
+resource "aws_subnet" "rds_private_subnet" {
+  vpc_id     = aws_vpc.ec2_vpc.id
+  cidr_block = var.private_subnet_cidr_block
+
+  tags = {
+    Name       = format("%s-private-subnet", var.environment)
+    Environment = var.environment
+  }
+}
+
 
 # Create a Route Table for the public subnet
 resource "aws_route_table" "ec2_public_rt" {
