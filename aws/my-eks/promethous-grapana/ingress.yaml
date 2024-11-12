@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: grafana
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: grafana-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/vpc-id: vpc-0f590c09823b080ac
+    alb.ingress.kubernetes.io/subnets: subnet-0c7485891c9d6541e, subnet-00a63531492c17ab3
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:699475925713:certificate/d4dafacf-0e17-43a1-a7fe-300c26bf7297
+    alb.ingress.kubernetes.io/security-groups: sg-0482b31f99bd5fda0
+    alb.ingress.kubernetes.io/healthcheck-port: "3000"
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+spec:
+  ingressClassName: alb
+  rules:
+  - host: graps.cloudopsschool.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 80
