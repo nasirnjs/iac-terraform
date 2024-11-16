@@ -6,13 +6,16 @@ resource "aws_vpc" "ec2_rds" {
   }
 }
 
-resource "aws_internet_gateway" "ec2_rds" {
+resource "aws_internet_gateway" "ec2_rds_igw" {
   vpc_id = aws_vpc.ec2_rds.id
   tags = {
     Name        = format("%s-igw", var.environment)
     Environment = var.environment
   }
 }
+
+# Fetch availability zones dynamically based on the region
+data "aws_availability_zones" "available" {}
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.ec2_rds.id
@@ -23,9 +26,6 @@ resource "aws_subnet" "public" {
     Environment = var.environment
   }
 }
-
-# Fetch availability zones dynamically based on the region
-data "aws_availability_zones" "available" {}
 
 # Private Subnet One
 resource "aws_subnet" "private_one" {
@@ -47,4 +47,25 @@ resource "aws_subnet" "private_two" {
     Name        = format("%s-private-subnet-two", var.environment)
     Environment = var.environment
   }
+}
+# Create a Route Table for the public subnet
+resource "aws_route_table" "ec2_rds_public_rt" {
+  vpc_id = aws_vpc.ec2_rds.id
+
+  # Route all traffic (0.0.0.0/0) through the Internet Gateway
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.ec2_rds_igw.id
+  }
+
+  tags = {
+    Name       = format("%s-public-rt", var.environment)
+    Environment = var.environment
+  }
+}
+
+# Associate the Route Table with the public subnet
+resource "aws_route_table_association" "ec2_public_rt_association" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.ec2_rds_public_rt.id
 }
