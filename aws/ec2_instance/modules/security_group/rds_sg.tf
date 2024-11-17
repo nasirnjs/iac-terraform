@@ -17,6 +17,7 @@ resource "aws_security_group" "rds_subnet_group" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
+    security_groups = [ aws_security_group.ec2_sg.id ]
     cidr_blocks = [
       data.aws_subnet.private_subnet_one.cidr_block,
       data.aws_subnet.private_subnet_two.cidr_block,
