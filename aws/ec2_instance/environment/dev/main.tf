@@ -21,14 +21,6 @@ module "vpc" {
   private_subnet_cidr_blocks_one = var.private_subnet_cidr_blocks_one
   private_subnet_cidr_blocks_two = var.private_subnet_cidr_blocks_two
 }
-# module "security_group" {
-#   source                  = "../../modules/security_group"
-#   environment  = var.environment
-#   vpc_id                  = module.vpc.vpc_id
-#   public_subnet_id        = module.vpc.public_subnet_id
-#   private_subnet_one_id   = module.vpc.private_subnet_one_id
-#   private_subnet_two_id   = module.vpc.private_subnet_two_id
-# }
 
 module "security_group" {
   source                  = "../../modules/security_group"

@@ -1,4 +1,13 @@
-resource "aws_security_group" "rds_sg" {
+# Fetch the CIDR blocks for the private subnets
+data "aws_subnet" "private_subnet_one" {
+  id = var.private_subnet_one_id
+}
+
+data "aws_subnet" "private_subnet_two" {
+  id = var.private_subnet_two_id
+}
+
+resource "aws_security_group" "rds_subnet_group" {
   name        = format("%s-rds-sg", var.environment)
   vpc_id      = var.vpc_id
 
@@ -9,8 +18,8 @@ resource "aws_security_group" "rds_sg" {
     to_port     = 3306
     protocol    = "tcp"
     cidr_blocks = [
-      var.private_subnet_one_id,
-      var.private_subnet_two_id,
+      data.aws_subnet.private_subnet_one.cidr_block,
+      data.aws_subnet.private_subnet_two.cidr_block,
     ]
   }
 

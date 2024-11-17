@@ -3,5 +3,5 @@ output "ec2_sg_id" {
 }
 
 output "rds_sg_id" {
-  value = aws_security_group.rds_sg.id
+  value = aws_security_group.rds_subnet_group.id
 }
