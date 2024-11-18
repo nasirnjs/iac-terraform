@@ -28,3 +28,4 @@ variable "private_subnet_az2" {
     type = string
     description = "value"
 }
+

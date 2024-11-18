@@ -21,3 +21,13 @@ module "vpc" {
   private_subnet_az1        = var.private_subnet_az1
   private_subnet_az2        = var.private_subnet_az2
 }
+module "nat_gateway" {
+  source             = "../../modules/nat-gw"
+  ym_vpc_id          = module.vpc.ym_vpc_id
+  environment        = var.environment
+  internet_gateway   = module.vpc.internet_gateway
+  public_subnet_az1  = module.vpc.public_subnet_az1
+  private_subnet_az1 = module.vpc.private_subnet_az1
+  private_subnet_az2 = module.vpc.private_subnet_az2
+}
+

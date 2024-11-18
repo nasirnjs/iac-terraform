@@ -28,3 +28,7 @@ variable "private_subnet_az2" {
     type = string
     description = "value"
 }
+# variable "internet_gateway" {
+#     type = string
+#     description = "value"
+# }
