@@ -1,17 +1,18 @@
+
 variable "environment" {
-    description = "environment"
-    type = string  
-}
-variable "Instance_ami" {
-    description = "aws Instance ami"
-    type = string
+  description = "Environment name (e.g., dev, prod)"
+  type        = string
 }
 variable "instance_type" {
-    description = "aws Instance Type"
-    type = string  
+  description = "Environment name (e.g., dev, prod)"
+  type        = string
 }
-variable "Name" {
-    description = "aws Instance Name"
-    type = string  
+variable "public_subnet_az1" {
+  description = "Subnet ID where the EC2 instance will be deployed"
+  type        = string
 }
 
+variable "alb_sg_id" {
+  description = "Security group ID for the EC2 instance"
+  type        = string
+}

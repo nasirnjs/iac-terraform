@@ -28,7 +28,13 @@ variable "private_subnet_az2" {
     type = string
     description = "value"
 }
-# variable "internet_gateway" {
-#     type = string
-#     description = "value"
-# }
+variable "alb_sg_name" {
+    type = string
+    description = "value"
+}
+# ec2 instance
+
+variable "instance_type" {
+  description = "Environment name (e.g., dev, prod)"
+  type        = string
+}

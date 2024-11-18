@@ -6,7 +6,6 @@ terraform {
     }
   }
 }
-
 provider "aws" {
   region = "us-east-1"
 }
@@ -22,7 +21,7 @@ module "vpc" {
   private_subnet_az2        = var.private_subnet_az2
 }
 module "nat_gateway" {
-  source             = "../../modules/nat-gw"
+  source             = "../../modules/nat_gw"
   ym_vpc_id          = module.vpc.ym_vpc_id
   environment        = var.environment
   internet_gateway   = module.vpc.internet_gateway
@@ -30,4 +29,16 @@ module "nat_gateway" {
   private_subnet_az1 = module.vpc.private_subnet_az1
   private_subnet_az2 = module.vpc.private_subnet_az2
 }
-
+module "sec_group" {
+  source = "../../modules/sec_group"
+  ym_vpc_id = module.vpc.ym_vpc_id
+  environment = var.environment
+  alb_sg_name = var.alb_sg_name
+}
+module "ec2" {
+  source               = "../../modules/ec2"
+  environment          = var.environment
+  instance_type        = var.instance_type
+  public_subnet_az1    = module.vpc.public_subnet_az1  
+  alb_sg_id            = module.sec_group.alb_sg_id 
+}
