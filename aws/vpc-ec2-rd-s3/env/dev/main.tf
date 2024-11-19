@@ -40,5 +40,6 @@ module "ec2" {
   environment          = var.environment
   instance_type        = var.instance_type
   public_subnet_az1    = module.vpc.public_subnet_az1  
-  alb_sg_id            = module.sec_group.alb_sg_id 
+  alb_sg_id            = module.sec_group.alb_sg_id
+  key_name             = var.key_name
 }

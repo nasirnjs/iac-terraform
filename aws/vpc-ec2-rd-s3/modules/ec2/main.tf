@@ -6,34 +6,25 @@ resource "aws_instance" "web_instance" {
     volume_size = 20
     volume_type = "gp2"
   }
-
   subnet_id               = var.public_subnet_az1
   vpc_security_group_ids  = [var.alb_sg_id]
   associate_public_ip_address = true
-
+  key_name = var.key_name
   user_data       = <<-EOF
-                #!/bin/bash
-                # Update package list
-                apt-get update -y
+              #!/bin/bash
+              sudo apt update -y
+              sudo apt install -y nginx
 
-                # Install Nginx
-                sudo apt-get install -y nginx
+              # Create index.html with H1 tag in the default NGINX web directory
+              echo "<h1>Hello From Ubuntu EC2 Instance!!!</h1>" | sudo tee /var/www/html/index.html
 
-                # Start the Nginx service
-                sudo systemctl start nginx
-
-                # Enable Nginx to start on boot
-                sudo systemctl enable nginx
-
-                # Allow HTTP traffic on port 80 in the firewall
-                sudo ufw allow 'Nginx HTTP'
-
-                # Restart Nginx to apply any changes
-                sudo systemctl restart nginx
+              # Restart NGINX to apply the changes
+              sudo systemctl restart nginx
               EOF
+  #user_data = file("${path.module}/nginx_install.sh")
+
   tags = {
     Name        = format("%s-web-server", var.environment)
     Environment = var.environment
   }
-
 }

@@ -16,3 +16,7 @@ variable "alb_sg_id" {
   description = "Security group ID for the EC2 instance"
   type        = string
 }
+variable "key_name" {
+    description = "Key to access the EC2 instance"
+    type = string
+}
