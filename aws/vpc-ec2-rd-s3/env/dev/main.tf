@@ -43,3 +43,12 @@ module "ec2" {
   alb_sg_id            = module.sec_group.alb_sg_id
   key_name             = var.key_name
 }
+module "aurora" {
+  source      = "../../modules/aurora_mysql"
+  environment = var.environment
+  db_password = "Pass4@Your34FDS"
+
+  # Pass subnet IDs from VPC module to the Aurora module
+  private_subnet_az1 = module.vpc.private_subnet_az1
+  private_subnet_az2 = module.vpc.private_subnet_az2
+}
