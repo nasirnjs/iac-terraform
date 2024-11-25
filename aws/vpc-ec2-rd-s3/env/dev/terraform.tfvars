@@ -10,3 +10,4 @@ alb_sg_name             = "alb_sg_allow_https"
 
 instance_type           = "t2.micro"
 key_name                = "nasir_tf"
+db_password             = "kjsdfks3dsfs2llf"

@@ -42,3 +42,7 @@ variable "key_name" {
     description = "Key to access the EC2 instance"
     type = string
 }
+variable "db_password" {
+    description = "Key to access the EC2 instance"
+    type = string
+}

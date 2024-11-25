@@ -52,5 +52,30 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
 }
 
 
-# security group for RDS
+# Aurora MySQL cluster security group
 
+resource "aws_security_group" "aurora_mysql" {
+  name        = "aurora_mysql_sg"
+  vpc_id            = var.ym_vpc_id
+  description = "Security group for Aurora MySQL Cluster"
+
+  tags = {
+    Name = "aurora_mysql_sg"
+  }
+
+  ingress {
+    description = "MYSQL/Aurora"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
