@@ -21,6 +21,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   master_username    = "test"
   master_password    = "Pass4fsfsfYour34FDS"
   deletion_protection = false
+  skip_final_snapshot = true
 
   # Associate the DB Subnet Group with the RDS Cluster
   db_subnet_group_name = aws_db_subnet_group.ym_rds_subnet_group.name
