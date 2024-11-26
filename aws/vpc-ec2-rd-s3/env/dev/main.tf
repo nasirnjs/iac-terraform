@@ -35,12 +35,14 @@ module "sec_group" {
   environment = var.environment
 }
 module "ec2" {
-  source               = "../../modules/ec2"
-  environment          = var.environment
-  instance_type        = var.instance_type
-  public_subnet_az1    = module.vpc.public_subnet_az1  
-  alb_sg_id            = module.sec_group.alb_sg_id
-  key_name             = var.key_name
+  source                = "../../modules/ec2"
+  environment           = var.environment
+  instance_type         = var.instance_type
+  public_subnet_az1     = module.vpc.public_subnet_az1  
+  alb_sg_id             = module.sec_group.alb_sg_id
+  key_name              = var.key_name
+  s3_bucket_arn         = module.s3.s3_bucket_arn
+  depends_on            = [module.s3]
 }
 module "aurora" {
   source      = "../../modules/aurora_mysql"

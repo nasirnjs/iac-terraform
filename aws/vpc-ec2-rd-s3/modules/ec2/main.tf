@@ -10,6 +10,7 @@ resource "aws_instance" "web_instance" {
   vpc_security_group_ids  = [var.alb_sg_id]
   associate_public_ip_address = true
   key_name = var.key_name
+  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
   user_data       = <<-EOF
               #!/bin/bash
               sudo apt update -y

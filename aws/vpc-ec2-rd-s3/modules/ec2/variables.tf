@@ -20,3 +20,7 @@ variable "key_name" {
     description = "Key to access the EC2 instance"
     type = string
 }
+variable "s3_bucket_arn" {
+  description = "ARN of the S3 bucket"
+  type        = string
+}
