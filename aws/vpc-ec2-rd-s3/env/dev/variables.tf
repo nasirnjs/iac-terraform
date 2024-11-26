@@ -43,3 +43,8 @@ variable "db_password" {
     description = "Key to access the EC2 instance"
     type = string
 }
+# s3
+variable "s3_bucket_name" {
+    description = "Key to access the EC2 instance"
+    type = string
+}

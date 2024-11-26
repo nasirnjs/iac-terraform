@@ -54,6 +54,6 @@ module "aurora" {
 }
 module "s3" {
   source      = "../../modules/s3"
-  bucket_name = "ecommerce-site-images"
+  bucket_name = var.s3_bucket_name
   environment = var.environment
 }

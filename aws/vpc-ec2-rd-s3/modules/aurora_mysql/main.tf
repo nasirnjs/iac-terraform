@@ -13,7 +13,7 @@ resource "aws_db_subnet_group" "ym_rds_subnet_group" {
 
 # Create the RDS Cluster
 resource "aws_rds_cluster" "rds_cluster" {
-  cluster_identifier = "example"
+  cluster_identifier = "ymrdscluster"
   engine             = "aurora-mysql"
   engine_mode        = "provisioned"
   engine_version     = "8.0.mysql_aurora.3.06.0"
@@ -47,11 +47,11 @@ resource "aws_rds_cluster_instance" "serverless_instance_1" {
   db_subnet_group_name = aws_db_subnet_group.ym_rds_subnet_group.name
 }
 
-resource "aws_rds_cluster_instance" "serverless_instance_2" {
-  cluster_identifier   = aws_rds_cluster.rds_cluster.id
-  instance_class       = "db.serverless"
-  engine               = aws_rds_cluster.rds_cluster.engine
-  engine_version       = aws_rds_cluster.rds_cluster.engine_version
-  availability_zone    = data.aws_availability_zones.available.names[1]
-  db_subnet_group_name = aws_db_subnet_group.ym_rds_subnet_group.name
-}
+# resource "aws_rds_cluster_instance" "serverless_instance_2" {
+#   cluster_identifier   = aws_rds_cluster.rds_cluster.id
+#   instance_class       = "db.serverless"
+#   engine               = aws_rds_cluster.rds_cluster.engine
+#   engine_version       = aws_rds_cluster.rds_cluster.engine_version
+#   availability_zone    = data.aws_availability_zones.available.names[1]
+#   db_subnet_group_name = aws_db_subnet_group.ym_rds_subnet_group.name
+# }

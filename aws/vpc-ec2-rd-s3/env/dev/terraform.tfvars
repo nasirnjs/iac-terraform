@@ -9,3 +9,5 @@ private_subnet_az2      = "15.0.4.0/24"
 instance_type           = "t2.micro"
 key_name                = "nasir_tf"
 db_password             = "kjsdfks3dsfs2llf"
+
+s3_bucket_name          = ym_com_pic
