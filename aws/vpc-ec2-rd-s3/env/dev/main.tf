@@ -50,3 +50,8 @@ module "aurora" {
   private_subnet_az2 = module.vpc.private_subnet_az2
   vpc_security_group_ids = [module.sec_group.aurora_mysql_sg_id]
 }
+module "s3" {
+  source      = "../../modules/s3"
+  bucket_name = "ecommerce-site-images"
+  environment = var.environment
+}
