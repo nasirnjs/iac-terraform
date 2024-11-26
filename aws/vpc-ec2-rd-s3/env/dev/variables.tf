@@ -28,10 +28,7 @@ variable "private_subnet_az2" {
     type = string
     description = "value"
 }
-variable "alb_sg_name" {
-    type = string
-    description = "value"
-}
+
 # ec2 instance
 
 variable "instance_type" {

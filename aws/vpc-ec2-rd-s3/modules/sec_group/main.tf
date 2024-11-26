@@ -1,7 +1,7 @@
 # security group for application load balancer / ec2 Instance
 resource "aws_security_group" "alb_sg" {
   vpc_id            = var.ym_vpc_id
-  name              =  var.alb_sg_name
+  name              = "ym_ec2_sg"
   tags = {
     Name            = format("%s-ym_alb_sg", var.environment)
     Environment     = var.environment

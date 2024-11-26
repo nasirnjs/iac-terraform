@@ -33,7 +33,6 @@ module "sec_group" {
   source = "../../modules/sec_group"
   ym_vpc_id = module.vpc.ym_vpc_id
   environment = var.environment
-  alb_sg_name = var.alb_sg_name
 }
 module "ec2" {
   source               = "../../modules/ec2"
