@@ -8,16 +8,17 @@
 - [Installing Terraform](#installing-terraform)
 - [HashiCorp Configuration Language (HCL) Basics](#hashicorp-configuration-language-hcl-basics)
 - [Terraform and HashiCorp Configuration Language (HCL) Basics](#terraform-and-hashicorp-configuration-language-hcl-basics)
+  - [Terraform Commands and Examples](#terraform-commands-and-examples)
   - [Examples of Terraform Commands](#examples-of-terraform-commands)
   - [3. Variables](#3-variables)
   - [4. Resource Attributes](#4-resource-attributes)
   - [5. Resource dependencies](#5-resource-dependencies)
   - [6. Output Variables](#6-output-variables)
-- [Terraform State](#terraform-state)
-  - [Terraform Commands and Examples](#terraform-commands-and-examples)
+- [What is Terraform State](#what-is-terraform-state)
+- [Purpose Terraform State](#purpose-terraform-state)
   - [Mutable vs Immutable Infrastructure](#mutable-vs-immutable-infrastructure)
-    - [Mutable Infrastructure:](#mutable-infrastructure)
-    - [Immutable Infrastructure:](#immutable-infrastructure)
+    - [Mutable Infrastructure](#mutable-infrastructure)
+    - [Immutable Infrastructure](#immutable-infrastructure)
     - [Use Cases:](#use-cases)
   - [LifeCycle Rules](#lifecycle-rules)
   - [Datasource](#datasource)
@@ -268,8 +269,42 @@ HashiCorp Configuration Language (HCL) is integral to defining infrastructure as
 
 # Terraform and HashiCorp Configuration Language (HCL) Basics
 
+## Terraform Commands and Examples
+
+1. Initialize a Terraform working directory.
+`terraform init`
+2. Validate Terraform configuration files for syntax errors.
+`terraform validate`
+3. Format Terraform configuration files.
+`terraform fmt`
+4. Show Terraform state or resource state.
+`terraform show`
+5. Show specific resource state (JSON format).
+`terraform show -json`
+6. Show providers required for the current configuration
+`terraform providers`
+7. Refresh the state of managed resources against real infrastructure.
+`terraform refresh`
+8. Generate a dependency graph of Terraform resources (in DOT format).
+```
+sudo apt install graphviz -y
+terraform graph | dot -Tsvg > graph.svg
+```
+9. Generate an execution plan for changes to be applied.
+`terraform plan`
+10. Apply the changes required to reach the desired state of the configuration.
+`terraform apply`
+11. Destroy Terraform-managed infrastructure.
+`terraform destroy`
+12. Pull the current state and output to stdout.
+`terraform state pull`
+
 ## Examples of Terraform Commands
 
+0. **provider**
+   - In Terraform, a provider is a plugin that allows Terraform to interact with different APIs and services. Providers are responsible for understanding the API of the resource they manage and how to create, read, update, and delete (CRUD) resources in that system. 
+   - Essentially, a provider is a bridge between Terraform and external services like AWS, Google Cloud, Azure, Kubernetes, etc.
+  
 1. **Initialize (`terraform init`):**
    `terraform init`
    - Purpose: Initializes the current directory as a Terraform working directory.
@@ -297,20 +332,23 @@ HashiCorp Configuration Language (HCL) is integral to defining infrastructure as
 `terraform plan`
    - Purpose: Generates an execution plan based on the current configuration.
    - Output: Displays proposed changes (additions, modifications, deletions) without actually applying them.
-4. Apply Changes (terraform apply):
+1. Apply Changes (terraform apply):
 `terraform apply`
    - Purpose: Applies the changes defined in the Terraform configuration to reach the desired state.
    - Action: Prompts for confirmation before executing operations like creating, modifying, or deleting resources.
-5. Validate (terraform validate):
+1. Validate (terraform validate):
 `terraform validate`
 
    - Purpose: Validates the syntax and configuration of Terraform files.
    - Output: Checks for any errors in the configuration files (*.tf) before planning or applying changes.
-6. Refresh (terraform refresh):
+1. Refresh (terraform refresh):
 `terraform refresh`
    - Purpose: Updates the Terraform state file (terraform.tfstate) with the current real-world infrastructure configuration.
    - Action: Useful when the state file needs to be synchronized due to changes made outside of Terraform.
-7. Destroy (terraform destroy):
+  `terraform plan --refresh=false`
+   - Disable the refreshing of the state when generating a plan. 
+   - By default, when you run terraform plan, Terraform will refresh the state of the infrastructure, which means it will compare the existing resources in your cloud provider or infrastructure platform with the state file to ensure it is up to date.
+1. Destroy (terraform destroy):
 `terraform destroy`
    - Purpose: Destroys all resources managed by Terraform for a given configuration.
    - Action: Safely decommissions and deletes resources provisioned by Terraform.
@@ -346,23 +384,6 @@ variable "region" {
 
 ## 4. Resource Attributes
 Resource Attributes typically refer to the properties or characteristics of a resource that can be referenced or used within other parts of the configuration. These attributes are usually accessed using interpolation syntax ${}.
-
-```hcl
-variable "filename" {
-  description = "File location for the local file resource"
-}
-resource "local_file" "pet" {
-  filename = var.filename
-  content  = "My favorite pet is ${random_pet.my-pet.id}"
-}
-
-resource "random_pet" "my-pet" {
-  prefix    = var.prefix
-  separator = var.separator
-  length    = var.length
-}
-
-```
 
 ## 5. Resource dependencies
 
@@ -449,43 +470,11 @@ Explainations:
 ## 6. Output Variables
 Output variables in Terraform allow you to expose certain values from your infrastructure deployment that you may need to reference or use in other configurations or scripts. Here's how you can define and use output variables in Terraform.
 
-```hcl
-variable "filename" {
-  description = "File location for the local file resource"
-}
+# What is Terraform State
 
-variable "prefix" {
-  description = "Prefix for generating random pet name"
-}
+The Terraform state file `terraform.tfstate` is a critical component of Terraform's infrastructure management. It is a JSON file that stores information about the resources Terraform manages and tracks the current state of the infrastructure. Terraform uses this file to map your configuration to real-world resources and to determine what changes need to be made when applying your configurations.
 
-variable "separator" {
-  description = "Separator for generating random pet name"
-}
-
-variable "length" {
-  description = "Length of the random pet name"
-}
-
-resource "local_file" "pet" {
-  filename = var.filename
-  content  = "My favorite pet is ${random_pet.my-pet.id}"
-}
-
-resource "random_pet" "my-pet" {
-  prefix    = var.prefix
-  separator = var.separator
-  length    = var.length
-}
-
-output "pet_name" {
-  value = random_pet.my-pet.id
-}
-```
-
-Explanation: 
-- Output Variable (main.tf) output "pet_name": Defines an output variable named "pet_name" that retrieves the id attribute from the random_pet.my-pet resource. This allows you to retrieve and use this value after Terraform applies the configuration.
-
-# Terraform State
+# Purpose Terraform State
 
 Terraform state is a fundamental aspect of managing infrastructure with Terraform, an infrastructure-as-code tool. It represents the current state of your infrastructure as tracked by Terraform itself. Here are key points about Terraform state:
 
@@ -501,74 +490,84 @@ Terraform state is a fundamental aspect of managing infrastructure with Terrafor
 
 - **State Commands**: Terraform provides commands (`terraform state`) to inspect, modify, and manage the state directly when necessary, although direct modifications should be handled carefully to avoid inconsistencies.
 
-## Terraform Commands and Examples
-
-1. Initialize a Terraform working directory.
-`terraform init`
-2. Validate Terraform configuration files for syntax errors.
-`terraform validate`
-3. Format Terraform configuration files.
-`terraform fmt`
-4. Show Terraform state or resource state.
-`terraform show`
-5. Show specific resource state (JSON format).
-`terraform show -json`
-6. Show providers required for the current configuration
-`terraform providers`
-7. Refresh the state of managed resources against real infrastructure.
-`terraform refresh`
-8. Generate a dependency graph of Terraform resources (in DOT format).
-```
-sudo apt install graphviz -y
-terraform graph | dot -Tsvg > graph.svg
-```
-9. Generate an execution plan for changes to be applied.
-`terraform plan`
-10. Apply the changes required to reach the desired state of the configuration.
-`terraform apply`
-11. Destroy Terraform-managed infrastructure.
-`terraform destroy`
-12. Pull the current state and output to stdout.
-`terraform state pull`
-
 
 ## Mutable vs Immutable Infrastructure
 
-### Mutable Infrastructure:
+**Key Differences Between Mutable and Immutable Infrastructure**
 
-**Definition:** Mutable infrastructure refers to traditional infrastructure where changes are made directly to running servers or instances. This involves configuring, updating, and patching existing resources in place.
+### Mutable Infrastructure
 
-**Characteristics:**
-- **Stateful Changes:** Servers or instances are updated by modifying their configurations or installing updates directly on them.
-- **Maintenance Complexity:** Managing mutable infrastructure requires careful planning to ensure updates and changes do not disrupt services or cause downtime.
-- **Configuration Management:** Tools like Chef, Puppet, Ansible, etc., are often used to manage and automate configuration changes.
-- **Risk of Drift:** Over time, servers can accumulate configuration drift where their actual state differs from their intended configuration.
+- Terraform's behavior is to update the existing resources (without destroying them).
+- If an attribute (like instance_type) is changed in the configuration, Terraform will modify the existing instance to match the updated configuration in-place (i.e., without deleting and recreating the resource).
 
-**Pros:**
-- Familiarity: Many organizations are accustomed to managing mutable infrastructure.
-- Flexibility: Changes can be made quickly and directly.
+**Mutable Infrastructure Example:**
+In mutable infrastructure, existing resources are modified in place without being destroyed. Here's a simple mutable example:
 
-**Cons:**
-- Complexity: Managing consistency and avoiding configuration drift can be challenging.
-- Risk: Changes made directly to running systems can introduce errors and downtime.
+**Example: Mutable Update of aws_instance**
 
-### Immutable Infrastructure:
+```hcl
+# main.tf
+resource "aws_instance" "example_instance" {
+  ami           = "ami-12345678"       # Initial AMI
+  instance_type = "t2.micro"           # Initial instance type
+  tags = {
+    Name = "ExampleInstance"
+  }
+}
 
-**Definition:** Immutable infrastructure treats infrastructure components (such as virtual machines, containers, etc.) as disposable, where updates and changes are made by replacing the entire instance rather than modifying it in place.
+# Later in the same configuration, we change the instance type:
+resource "aws_instance" "example_instance" {
+  ami           = "ami-12345678"       # Same AMI (no change)
+  instance_type = "t2.medium"          # Changed instance type (mutable change)
+  tags = {
+    Name = "ExampleInstance"
+  }
+}
+```
+**What happens during terraform apply?**\
+- When you change the instance_type (from t2.micro to t2.medium), Terraform will modify the existing EC2 instance in place (it will not destroy it).
+- The instance remains with the same ID (i.e., it is not replaced, just modified).
 
-**Characteristics:**
-- **Replace Instead of Update:** Instead of updating an existing instance, a new instance is created with the desired changes, and the old instance is discarded.
-- **Immutable Artifacts:** Infrastructure components (like machine images or container images) are treated as immutable artifacts that can be versioned.
-- **Automation-Centric:** Deployment and scaling are often automated using tools like Docker, Kubernetes, Terraform, etc.
-- **Consistency:** Ensures consistency in deployments as each instance is created from the same immutable artifact.
+**Terraform's Action:**
+- Terraform Plan: It will show that the instance type is being updated (not replaced).
+- Terraform Apply: The instance type will be changed to t2.medium without deleting and recreating the instance.
 
-**Pros:**
-- Predictability: Immutable deployments are more predictable and less prone to configuration drift.
-- Scalability: Easier to scale by launching new instances rather than modifying existing ones.
+### Immutable Infrastructure
 
-**Cons:**
-- Learning Curve: Requires adopting new tools and workflows for managing immutable artifacts.
-- Initial Setup: Setting up automation and infrastructure as code can be more complex initially.
+- In immutable infrastructure, Terraform will destroy the old resource and create a new one with the new configuration.
+- Typically, this is done by creating a new resource (like a new EC2 instance) and optionally removing the old one after it's replaced.
+
+```hcl
+# main.tf
+resource "aws_instance" "example_instance" {
+  ami           = "ami-12345678"       # Initial AMI
+  instance_type = "t2.micro"           # Initial instance type
+  tags = {
+    Name = "ExampleInstance"
+  }
+}
+
+# In immutable infrastructure, when we want to update the instance, we create a new resource with different configurations:
+resource "aws_instance" "example_instance_v2" {
+  ami           = "ami-87654321"       # New AMI (updated version)
+  instance_type = "t2.medium"          # Changed instance type (immutable change)
+  tags = {
+    Name = "ExampleInstance_v2"
+  }
+}
+```
+**What happens during terraform apply?**
+- When you change the ami and instance_type, Terraform sees the change as a new resource.
+- Terraform will destroy the old EC2 instance (with the previous configuration) and create a new instance with the updated configuration (ami-87654321 and t2.medium).
+  
+**Terraform's Action**
+- Terraform Plan: It will show that the old instance is being destroyed and a new one is being created.
+- Terraform Apply: The old instance is destroyed, and a new one with the updated configuration is created.
+
+**Whether an attribute is mutable or immutable**
+
+- ~ aws_instance.example: This means the instance will be updated in-place (mutable attribute).
+- - aws_instance.example: This means the instance will be destroyed and replaced (immutable attribute).
 
 ### Use Cases:
 
