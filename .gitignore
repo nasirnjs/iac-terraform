@@ -5,3 +5,4 @@
 **/*.tfstate.lock.info
 **/.terraform.lock.hcl
 
+terraform-associate.pdf
