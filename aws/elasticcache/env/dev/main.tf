@@ -25,13 +25,21 @@ module "security_group" {
     environment                 = var.environment
     vpc_id                      = module.vpc.vpc_id
 }
+module "ec2" {
+  source                = "../../modules/ec2"
+  environment           = var.environment
+  instance_type         = var.instance_type
+  subnet_id             = module.vpc.public_subnet_az1
+  sg_id                 = module.security_group.ec2_sg_ids
+  key_name              = var.key_name
+}
 module "redis" {
     source = "../../modules/redis"
     environment       = var.environment
-    redis_sg_ids      = module.security_group.redis_sg_ids
-    vpc_id       = module.vpc.vpc_id
-    private_subnet_az1 = module.vpc.private_subnet_az1
-    private_subnet_az2 = module.vpc.private_subnet_az2
+    redis_sg_ids        = module.security_group.redis_sg_ids
+    vpc_id              = module.vpc.vpc_id
+    private_subnet_az1  = module.vpc.private_subnet_az1
+    private_subnet_az2  = module.vpc.private_subnet_az2
 }
 
 

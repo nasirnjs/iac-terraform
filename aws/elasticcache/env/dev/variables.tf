@@ -35,14 +35,14 @@ variable "private_subnet_az2" {
 
 # # ec2 instance
 
-# variable "instance_type" {
-#   description = "Environment name (e.g., dev, prod)"
-#   type        = string
-# }
-# variable "key_name" {
-#     description = "Key to access the EC2 instance"
-#     type = string
-# }
+variable "instance_type" {
+  description = "Environment name (e.g., dev, prod)"
+  type        = string
+}
+variable "key_name" {
+    description = "Key to access the EC2 instance"
+    type = string
+}
 # variable "db_password" {
 #     description = "Key to access the EC2 instance"
 #     type = string

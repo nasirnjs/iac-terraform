@@ -6,6 +6,6 @@ public_subnet_az2       = "21.0.2.0/24"
 private_subnet_az1      = "21.0.3.0/24"
 private_subnet_az2      = "21.0.4.0/24"
 
-# instance_type           = "t2.micro"
-# key_name                = "nasir_tf"
+instance_type           = "t2.micro"
+key_name                = "nasir-aesl"
 # db_password             = "kjsdfks3dsfs2llf"
