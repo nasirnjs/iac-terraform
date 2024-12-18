@@ -55,3 +55,26 @@ resource "aws_s3_bucket_policy" "public_read_policy" {
 output "bucket_name" {
   value = aws_s3_bucket.devops_buckets.bucket
 }
+
+# Bucket policy to grant write permissions to a specific IAM user
+resource "aws_s3_bucket_policy" "write_permission_policy" {
+  bucket = aws_s3_bucket.devops_buckets.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "AllowSpecificUserWriteAccess",
+        Effect    = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::699475925713:user/kader" # Replace with the IAM user's ARN
+        },
+        Action    = [
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource  = "${aws_s3_bucket.devops_buckets.arn}/*"
+      }
+    ]
+  })
+}
