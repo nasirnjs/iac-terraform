@@ -1,27 +1,31 @@
-resource "aws_vpc" "ym_vpc" {
-  cidr_block = "10.0.0.0/16"
-
-  tags = {
-    Name = "ym-vpc"
+data "aws_availability_zones" "available" {
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
   }
 }
 
-resource "aws_subnet" "private_1a" {
-  vpc_id            = aws_vpc.ym_vpc.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.17.0"
 
-  tags = {
-    Name = "ym-private-1a"
+  name = "${var.name}-vpc"
+  cidr = var.vpc_cidr
+
+  azs             = var.azs
+  private_subnets = [for k, v in var.azs : cidrsubnet(var.vpc_cidr, 4, k)]
+  public_subnets  = [for k, v in var.azs : cidrsubnet(var.vpc_cidr, 8, k + 48)]
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
   }
-}
 
-resource "aws_subnet" "private_1b" {
-  vpc_id            = aws_vpc.ym_vpc.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-1b"
-
-  tags = {
-    Name = "ym-private-1b"
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = 1
   }
+
+  tags = var.tags
 }

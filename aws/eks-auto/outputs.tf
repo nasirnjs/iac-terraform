@@ -1,11 +1,4 @@
-output "vpc_id" {
-  value = aws_vpc.ym_vpc.id
-}
-
-output "subnet_private_1a_id" {
-  value = aws_subnet.private_1a.id
-}
-
-output "subnet_private_1b_id" {
-  value = aws_subnet.private_1b.id
+output "configure_kubectl" {
+  description = "Configure kubectl: make sure you're logged in with the correct AWS profile and run the following command to update your kubeconfig"
+  value       = "aws eks --region ${var.region} update-kubeconfig --name ${module.eks.cluster_name}"
 }
