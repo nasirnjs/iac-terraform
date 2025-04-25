@@ -366,3 +366,5 @@ kubectl logs -f -n kube-system -l app.kubernetes.io/name=karpenter -c controller
 [References 2](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest/examples/karpenter)
 
 [References 3](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v20.36.0/examples/karpenter/main.tf)
+
+[References 4](https://dev.to/aws-builders/migrating-from-eks-cluster-autoscaler-to-karpenter-3h17)
