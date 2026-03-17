@@ -4,9 +4,6 @@
 - [Why Terraform?](#why-terraform)
 - [Installing Terraform](#installing-terraform)
 - [HashiCorp Configuration Language (HCL) Basics](#hashicorp-configuration-language-hcl-basics)
-- [Terraform Basic Commands and Examples](#terraform-basic-commands-and-examples)
-  - [Examples of Terraform Commands](#examples-of-terraform-commands)
-  - [3. Variables](#3-variables)
   - [4. Resource Attributes](#4-resource-attributes)
   - [5. Resource dependencies](#5-resource-dependencies)
   - [6. Output Variables](#6-output-variables)
@@ -34,52 +31,19 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
 # HashiCorp Configuration Language (HCL) Basics
 
 1. **Purpose and Syntax:**
-   - **Purpose:** HCL is designed specifically for configuring infrastructure and services in HashiCorp tools like Terraform, Vault, Consul, and others.
-   - **Syntax:** HCL uses a simple and human-readable syntax based on key-value pairs, blocks, and expressions.
+- **Purpose:** HCL is designed specifically for configuring infrastructure and services in HashiCorp tools like Terraform, Vault, Consul, and others.
+- **Syntax:** HCL uses a simple and human-readable syntax based on key-value pairs, blocks, and expressions.
   
-2.  **Blocks and Arguments**
-   - Terraform and other HashiCorp tools, consist of blocks and arguments as their primary structural components.
-    **Blocks**
-    - Definition: A block is a structural element in HCL that defines a resource, module, or configuration. Blocks group related settings or operations.
-    ```bash
-    block_type "label" "optional_label" {
-    argument_name = value
-    }
-    ```
-    **Components:**
-    - Block Type: The type of the block (e.g., resource, provider, module).
-    - Labels: Unique identifiers for the block, such as the name or type of the resource.
-    - Body: The contents inside {}, which often consist of arguments or nested blocks.
-    ```bash
-    resource "aws_instance" "example" {
-      ami           = "ami-123456"
-      instance_type = "t2.micro"
-    }
-    ```
-    
-    **Arguments**
-    - Definition: Arguments define key-value pairs inside blocks. They configure specific properties or settings for the block.
-    ```bash
-    provider "aws" {
-      region  = "us-west-2"
-      profile = "my-profile"
-    }
-    ```
-    **provider** Block:
+1. **provider** Block:
 
-    - What it is: Specifies the provider Terraform will use. Here, the **aws** provider enables Terraform to manage AWS resources.
-    - Why it's necessary: Terraform requires a provider configuration to communicate with the target infrastructure.
-  
-    Arguments within the Block:
+- What it is: Specifies the provider Terraform will use. Here, the **aws** provider enables Terraform to manage AWS resources.
+- Why it's necessary: Terraform requires a provider configuration to communicate with the target infrastructure.
 
-    **region** Argument
-    - What it is: Specifies the AWS region where Terraform will create and manage resources.
-    - Value: "us-west-2" is the Oregon region of AWS.
 
-3. **Variables:**
-   - **Declaration:** Variables in HCL are declared using the `variable` keyword.
-   - **Usage:** Variables allow you to parameterize your configurations, making them reusable and configurable.
-   - **Example:**
+2. **Variables:**
+- **Declaration:** Variables in HCL are declared using the `variable` keyword.
+- **Usage:** Variables allow you to parameterize your configurations, making them reusable and configurable.
+- **Example:**
      ```hcl
      variable "region" {
        type    = string
@@ -88,10 +52,10 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 2. **Blocks:**
-   - **Definition:** Blocks are used to define resources or configuration objects.
-   - **Syntax:** Blocks start with a block type followed by curly braces `{}` containing configuration settings.
-   - **Example:**
-     ```hcl
+- **Definition:** Blocks are used to define resources or configuration objects.
+- **Syntax:** Blocks start with a block type followed by curly braces `{}` containing configuration settings.
+- **Example:**
+  ```hcl
      resource "aws_instance" "example" {
        ami           = "ami-0c55b159cbfafe1f0"
        instance_type = "t2.micro"
@@ -99,9 +63,9 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 3. **Expressions:**
-   - **Interpolation:** HCL supports interpolation using `${}` to dynamically insert values into strings.
-   - **Functions:** HCL includes built-in functions for data manipulation and calculations within configurations.
-   - **Example:**
+- **Interpolation:** HCL supports interpolation using `${}` to dynamically insert values into strings.
+- **Functions:** HCL includes built-in functions for data manipulation and calculations within configurations.
+- **Example:**
      ```hcl
      resource "aws_instance" "example" {
        ami           = "ami-${var.ami_id}"
@@ -110,9 +74,9 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 4. **Comments:**
-   - **Single-line:** Comments start with `#`.
-   - **Multi-line:** Enclosed between `/* */`.
-   - **Example:**
+- **Single-line:** Comments start with `#`.
+- **Multi-line:** Enclosed between `/* */`.
+- **Example:**
      ```hcl
      # This is a single-line comment
      /*
@@ -122,13 +86,13 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      */
      ```
 5. **Types:**
-   - HCL supports various types including string, number, boolean, list, and map types.
-   - Type constraints can be specified for variables to enforce data validation.
+  - HCL supports various types including string, number, boolean, list, and map types.
+  - Type constraints can be specified for variables to enforce data validation.
 
 6. **Modules:**
-   - **Definition:** Modules in HCL allow you to encapsulate and reuse configurations.
-   - **Usage:** They promote reusability, modularization, and abstraction of configuration logic across projects.
-   - **Example:**
+- **Definition:** Modules in HCL allow you to encapsulate and reuse configurations.
+- **Usage:** They promote reusability, modularization, and abstraction of configuration logic across projects.
+- **Example:**
      ```hcl
      module "vpc" {
        source = "./modules/vpc"
@@ -137,9 +101,9 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 7.  **Providers:**
-   - **Definition:** Providers configure and expose resources within Terraform.
-   - **Configuration:** They are defined with `provider "name" {}` and configured with settings like access keys, endpoints, etc.
-   - **Example:**
+- **Definition:** Providers configure and expose resources within Terraform.
+- **Configuration:** They are defined with `provider "name" {}` and configured with settings like access keys, endpoints, etc.
+- **Example:**
      ```hcl
      provider "aws" {
        region = "us-west-2"
@@ -147,8 +111,8 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 8.  **Conditional Logic:**
-   - **Usage:** HCL supports conditional logic using `if`, `else`, and `for` expressions.
-   - **Example:**
+- **Usage:** HCL supports conditional logic using `if`, `else`, and `for` expressions.
+- **Example:**
      ```hcl
      resource "aws_instance" "example" {
        count = var.create_instances ? 2 : 0
@@ -158,9 +122,10 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 9.  **Output Values:**
-    - **Definition:** Outputs in HCL define values that are displayed after applying configurations.
-    - **Usage:** Useful for displaying resource IDs, IP addresses, or other information.
-    - **Example:**
+- **Definition:** Outputs in HCL define values that are displayed after applying configurations.
+- **Usage:** Useful for displaying resource IDs, IP addresses, or other information.
+- **Example:**
+
       ```hcl
       output "instance_id" {
         value = aws_instance.example.id
@@ -173,7 +138,7 @@ Basic format of the terraform configuration file main.tf looks like this.
   Pic: Basic format of the terraform configuration file 
 </p>
 
-10. Remote Backend
+1.   Remote Backend
 
 Summary:
 
