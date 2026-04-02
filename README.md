@@ -4,6 +4,9 @@
 - [Why Terraform?](#why-terraform)
 - [Installing Terraform](#installing-terraform)
 - [HashiCorp Configuration Language (HCL) Basics](#hashicorp-configuration-language-hcl-basics)
+- [Terraform Basic Commands and Examples](#terraform-basic-commands-and-examples)
+  - [Examples of Terraform Commands](#examples-of-terraform-commands)
+  - [3. Variables](#3-variables)
   - [4. Resource Attributes](#4-resource-attributes)
   - [5. Resource dependencies](#5-resource-dependencies)
   - [6. Output Variables](#6-output-variables)
@@ -15,12 +18,32 @@
     - [Use Cases:](#use-cases)
   - [LifeCycle Rules](#lifecycle-rules)
   - [Datasource](#datasource)
+    - [4. What is a Resource in Terraform?](#4-what-is-a-resource-in-terraform)
+    - [9. What is Terraform State?](#9-what-is-terraform-state)
+    - [10. Why is Terraform state important?](#10-why-is-terraform-state-important)
+    - [11. What is Remote State?](#11-what-is-remote-state)
+    - [12. What is State Locking?](#12-what-is-state-locking)
+    - [19. What is Terraform Backend?](#19-what-is-terraform-backend)
+    - [20. Difference between `count` and `for_each`?](#20-difference-between-count-and-for_each)
+    - [21. What is Terraform Workspace?](#21-what-is-terraform-workspace)
+    - [22. What is Dependency in Terraform?](#22-what-is-dependency-in-terraform)
+    - [23. What is Provisioner in Terraform?](#23-what-is-provisioner-in-terraform)
+    - [24. What is a Data Source?](#24-what-is-a-data-source)
+    - [26. How do you manage multiple environments in Terraform?](#26-how-do-you-manage-multiple-environments-in-terraform)
+    - [27. How do you handle secrets in Terraform?](#27-how-do-you-handle-secrets-in-terraform)
+    - [28. How do you avoid state file conflicts in team environments?](#28-how-do-you-avoid-state-file-conflicts-in-team-environments)
+    - [29. How do you manage drift in Terraform?](#29-how-do-you-manage-drift-in-terraform)
+    - [30. How do you integrate Terraform in CI/CD?](#30-how-do-you-integrate-terraform-in-cicd)
+    - [32. What are lifecycle rules?](#32-what-are-lifecycle-rules)
+    - [33. What is `taint` and `untaint`?](#33-what-is-taint-and-untaint)
+    - [34. How do you import existing resources?](#34-how-do-you-import-existing-resources)
 
 
 
 # Why Terraform?
 
-Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexibility, cloud-agnostic nature, and powerful features that make it suitable for managing modern infrastructure. 
+Terraform is an Infrastructure as Code (IaC) tool developed by HashiCorp that allows you to define and provision infrastructure using declarative configuration files.
+
 
 
 # Installing Terraform
@@ -90,7 +113,7 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
   - Type constraints can be specified for variables to enforce data validation.
 
 6. **Modules:**
-- **Definition:** Modules in HCL allow you to encapsulate and reuse configurations.
+- **Definition:** In Terraform, a module is a reusable collection of Terraform configuration files used to create and manage a set of resources.
 - **Usage:** They promote reusability, modularization, and abstraction of configuration logic across projects.
 - **Example:**
      ```hcl
@@ -101,7 +124,7 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 7.  **Providers:**
-- **Definition:** Providers configure and expose resources within Terraform.
+- **Definition:** Terraform providers are plugins that enable Terraform to interact with APIs of cloud platforms and services. They are responsible for creating, updating, and deleting resources by translating Terraform configuration into API calls.
 - **Configuration:** They are defined with `provider "name" {}` and configured with settings like access keys, endpoints, etc.
 - **Example:**
      ```hcl
@@ -122,7 +145,7 @@ Terraform is a highly popular Infrastructure as Code (IaC) tool due to its flexi
      ```
 
 9.  **Output Values:**
-- **Definition:** Outputs in HCL define values that are displayed after applying configurations.
+- **Definition:** Terraform output values are used to expose useful information about infrastructure after deployment. They help in displaying results, sharing data between modules, and integrating with external systems.
 - **Usage:** Useful for displaying resource IDs, IP addresses, or other information.
 - **Example:**
 
@@ -138,11 +161,21 @@ Basic format of the terraform configuration file main.tf looks like this.
   Pic: Basic format of the terraform configuration file 
 </p>
 
-1.   Remote Backend
 
-Summary:
+10. Remote Backend
 
-HashiCorp Configuration Language (HCL) is integral to defining infrastructure as code (IaC) in tools like Terraform, providing a clear and concise syntax for configuring resources across various cloud and on-premises platforms. Understanding these basics allows you to effectively manage and automate infrastructure deployments using HCL-based configurations.
+In Terraform, a remote backend is used to store the Terraform state file (terraform.tfstate) in a remote location instead of locally.
+
+```bash
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-lock"
+  }
+}
+```
 
 [Provider References](https://registry.terraform.io/browse/providers)
 
@@ -547,4 +580,190 @@ To use this data source elsewhere in your configuration, you can reference it us
 
 What are some common use cases for Terraform data sources?\
 Answer: Common use cases for Terraform data sources include fetching details about existing infrastructure, such as VPCs, subnets, security groups, or IAM roles. They can also be used to retrieve information needed for dynamic configurations, such as the latest AMI ID for an EC2 instance.
+
+
+
+### 4. What is a Resource in Terraform?
+
+A resource represents a real infrastructure object like:
+
+* EC2 instance
+* VPC
+* Kubernetes cluster
+
+### 9. What is Terraform State?
+
+Terraform state is a file (`terraform.tfstate`) that stores:
+
+* Resource mappings
+* Metadata
+* Current infrastructure state
+
+
+### 10. Why is Terraform state important?
+
+* Tracks resources
+* Enables updates instead of recreation
+* Prevents drift
+
+
+### 11. What is Remote State?
+
+Storing state remotely (instead of locally), e.g.:
+
+* S3
+* GCS
+
+Benefits:
+
+* Collaboration
+* Locking
+* Security
+
+Remote backend but no real exampl
+```yaml
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-lock"
+  }
+}
+```
+### 12. What is State Locking?
+
+Prevents multiple users from modifying state simultaneously.
+
+Example:
+
+* DynamoDB locking (AWS)
+
+
+### 19. What is Terraform Backend?
+
+Backend defines:
+
+* Where state is stored
+* How operations are executed
+
+Example:
+
+* S3 backend
+* Remote backend
+
+### 20. Difference between `count` and `for_each`?
+
+| Feature   | count               | for_each         |
+| --------- | ------------------- | ---------------- |
+| Type      | Index-based         | Key-based        |
+| Best for  | Identical resources | Unique resources |
+| Stability | Less stable         | More stable      |
+
+
+### 21. What is Terraform Workspace?
+
+Allows multiple environments:
+
+* dev
+* staging
+* prod
+
+
+### 22. What is Dependency in Terraform?
+
+Terraform automatically builds dependency graph.
+
+You can explicitly define using:
+
+```hcl
+depends_on = []
+```
+
+
+### 23. What is Provisioner in Terraform?
+
+Used to execute scripts on resources.
+
+Examples:
+
+* remote-exec
+* local-exec
+
+⚠️ Not recommended for production (use configuration management tools instead)
+
+
+### 24. What is a Data Source?
+
+Used to fetch existing infrastructure data.
+
+Example:
+
+```hcl
+data "aws_ami" "example" {}
+```
+
+### 26. How do you manage multiple environments in Terraform?
+
+Options:
+
+* Workspaces
+* Separate state files
+* Folder structure (best practice)
+
+### 27. How do you handle secrets in Terraform?
+
+* Environment variables
+* Vault
+* Avoid hardcoding secrets
+
+### 28. How do you avoid state file conflicts in team environments?
+
+* Use remote backend
+* Enable state locking
+* Use CI/CD pipelines
+
+### 29. How do you manage drift in Terraform?
+
+* Run `terraform plan`
+* Use `terraform refresh`
+* Monitor infrastructure
+
+### 30. How do you integrate Terraform in CI/CD?
+
+Tools:
+
+* Jenkins
+* GitHub Actions
+* GitLab CI
+
+Steps:
+
+1. Validate
+2. Plan
+3. Manual approval
+4. Apply
+
+
+### 32. What are lifecycle rules?
+
+Control resource behavior:
+
+```hcl
+lifecycle {
+  create_before_destroy = true
+  prevent_destroy       = true
+}
+```
+
+### 33. What is `taint` and `untaint`?
+
+* `taint` → forces resource recreation
+* `untaint` → removes taint from resource
+
+### 34. How do you import existing resources?
+
+```bash
+terraform import aws_instance.example i-123456
+```
 
