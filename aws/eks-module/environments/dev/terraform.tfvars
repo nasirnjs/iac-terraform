@@ -21,7 +21,7 @@ node_instance_types    = ["c5.xlarge"]
 node_desired           = 1
 node_min               = 1
 node_max               = 3
-key_name           = "nasir-mumbai-key"
+key_name               = "nasir-mumbai-key"
 
 # bastion-host
 ami_id                = "ami-05d2d839d4f73aafb"

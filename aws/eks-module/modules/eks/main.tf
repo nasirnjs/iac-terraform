@@ -13,6 +13,8 @@ module "eks" {
 
   enable_cluster_creator_admin_permissions = true
 
+  enable_irsa = true
+
   addons = {
     coredns                = {}
     eks-pod-identity-agent = {
@@ -46,6 +48,10 @@ module "eks" {
         AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
       }
+      tags = merge(var.tags, {
+        "k8s.io/cluster-autoscaler/enabled"     = "true"
+        "k8s.io/cluster-autoscaler/${var.name}" = "owned"
+      })
     }
   }
 

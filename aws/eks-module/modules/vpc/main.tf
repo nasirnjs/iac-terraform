@@ -19,8 +19,8 @@ module "vpc" {
 
   # NAT Gateway configuration for private subnets
   enable_nat_gateway     = true
-  single_nat_gateway     = true      # One NAT Gateway (cost-effective for dev/stage)
-  one_nat_gateway_per_az = false     # Set to true in prod if you want HA
+  single_nat_gateway     = true
+  one_nat_gateway_per_az = false
 
   # Important for EKS
   enable_dns_hostnames = true
