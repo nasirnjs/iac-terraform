@@ -1,7 +1,22 @@
-vpc_cidr_block          = "15.0.0.0/16"
-vpc_name                = "yourmentors_vpc"
-environment             = "dev"
-public_subnet_az1       = "15.0.1.0/24"
-public_subnet_az2       = "15.0.2.0/24"
-private_subnet_az1      = "15.0.3.0/24"
-private_subnet_az2      = "15.0.4.0/24"
+
+vpc_name       = "prod-vpc"
+vpc_cidr_block = "10.0.0.0/16"
+environment    = "prod"
+
+availability_zones = [
+  "us-east-2a",
+  "us-east-2b",
+  "us-east-2c"
+]
+
+public_subnets = [
+  "10.0.101.0/24",
+  "10.0.102.0/24",
+  "10.0.103.0/24"
+]
+
+private_subnets = [
+  "10.0.1.0/24",
+  "10.0.2.0/24",
+  "10.0.3.0/24"
+]

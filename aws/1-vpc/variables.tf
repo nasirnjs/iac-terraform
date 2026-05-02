@@ -1,31 +1,30 @@
-variable "vpc_cidr_block" {
-    description = "value"
-    type = string
-}
+
 variable "vpc_name" {
-    description = "value"
-    type = string 
-}
-variable "environment" {
-    description = "value"
-    type = string 
-}
-# 
-variable "public_subnet_az1" {
-    type = string
-    description = "value"  
-}
-variable "public_subnet_az2" {
-    type = string
-    description = "value"
-}
-#
-variable "private_subnet_az1" {
-    type = string
-    description = "value" 
-}
-variable "private_subnet_az2" {
-    type = string
-    description = "value"
+  description = "Name of the VPC"
+  type        = string
 }
 
+variable "vpc_cidr_block" {
+  description = "CIDR block for the VPC"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+}
+
+variable "availability_zones" {
+  description = "List of Availability Zones for the VPC"
+  type        = list(string)
+}
+
+variable "public_subnets" {
+  description = "List of public subnet CIDR blocks"
+  type        = list(string)
+}
+
+variable "private_subnets" {
+  description = "List of private subnet CIDR blocks"
+  type        = list(string)
+}
