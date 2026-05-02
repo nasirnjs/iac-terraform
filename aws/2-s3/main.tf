@@ -1,204 +1,40 @@
-# Task 1: Create S3 Bucket Resource
-resource "aws_s3_bucket" "devops_buckets" {
+module "s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "5.12.0"
+
   bucket = var.bucket_name
+  # Allow deletion of non-empty bucket
+  #force_destroy = true
 
-  tags = {
-    Name        = "YourMentors TF Bucket"
-    Environment = var.env_name
+  # Recommended settings
+  control_object_ownership = true
+  object_ownership         = "BucketOwnerEnforced"
+
+  versioning = {
+    enabled = true
   }
-}
 
-# Step 3: Ownership Controls
-resource "aws_s3_bucket_ownership_controls" "ownership" {
-  bucket = aws_s3_bucket.devops_buckets.id
-
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
-# Step 4: Public Access Block Settings
-resource "aws_s3_bucket_public_access_block" "public_access" {
-  depends_on = [aws_s3_object.file_upload_bucket]
-  bucket = aws_s3_bucket.devops_buckets.id
-
+  # Only disable blocks if truly needed
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
-}
 
-# Delegate Full Bucket Control to nasir
-resource "aws_s3_bucket_policy" "combined_policy" {
-  bucket = aws_s3_bucket.devops_buckets.id
-  depends_on = [ aws_s3_bucket_public_access_block.public_access ]
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Sid       = "PublicReadGetObject",
-        Effect    = "Allow",
-        Principal = "*",
-        Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.devops_buckets.arn}/*"
-      },
-      {
-        Sid       = "AllowNasirFullControl",
-        Effect    = "Allow",
-        Principal = {
-          AWS = "arn:aws:iam::699475925713:user/nasir"
-        },
-        Action    = "s3:*",
-        Resource  = [
-          "${aws_s3_bucket.devops_buckets.arn}",
-          "${aws_s3_bucket.devops_buckets.arn}/*"
-        ]
-      }
-    ]
+  attach_policy = true
+  policy        = templatefile("${path.module}/policies/s3-public-read.json", {
+    bucket_name = var.bucket_name
   })
-}
 
-# Step 2: Upload objects to S3 bucket
-resource "aws_s3_object" "file_upload_bucket" {
-  for_each               = fileset("./images", "**")
-  bucket                 = aws_s3_bucket.devops_buckets.id
-  key                    = each.key #name of the object
-  source                 = "${"./images"}/${each.value}"
-  etag                   = filemd5("${"./images"}/${each.value}")
-  server_side_encryption = "AES256"
-  content_type            = "image/jpeg"
-
-  depends_on = [aws_s3_bucket.devops_buckets]
-}
-
-# Step 5: Enabled the server side encryption using KMS key
-resource "aws_kms_key" "s3_bucket_kms_key" {
-  description             = "KMS key for s3 bucket"
-  deletion_window_in_days = 7
-  tags = {
-    name = "KMS key for S3 bucket"
-  }
-}
-
-resource "aws_kms_alias" "s3_bucket_kms_key_alias" {
-  name          = "alias/s3_bucket_kms_key_alias"
-  target_key_id = aws_kms_key.s3_bucket_kms_key.key_id
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "s3_bucket_encryption_with_kms_key" {
-  bucket = aws_s3_bucket.devops_buckets.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.s3_bucket_kms_key.arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
-}
-
-# Step 6: Bucket policy to grant write permissions to a specific IAM user
-resource "aws_s3_bucket_policy" "write_permission_policy" {
-  bucket = aws_s3_bucket.devops_buckets.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Sid       = "AllowSpecificUserWriteAccess",
-        Effect    = "Allow",
-        Principal = {
-          AWS = "arn:aws:iam::699475925713:user/kader" # Replace with the IAM user's ARN
-        },
-        Action    = [
-          "s3:PutObject",
-          "s3:DeleteObject"
-        ],
-        Resource  = "${aws_s3_bucket.devops_buckets.arn}/*"
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
       }
-    ]
-  })
-}
-
-# Step 7: S3 Versioning
-resource "aws_s3_bucket_versioning" "bucket_versioning" {
-  bucket = aws_s3_bucket.devops_buckets.id
-  versioning_configuration {
-    status = "Enabled"
+    }
   }
-}
 
-# Step 8: S3 Lifecycle Rules
-resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
-  # Must have bucket versioning enabled first
-  depends_on = [aws_s3_bucket_versioning.bucket_versioning]
-
-  bucket = aws_s3_bucket.devops_buckets.id
-
-  rule {
-    id = "config"
-
-    filter {
-      prefix = "config/"
-    }
-
-    noncurrent_version_expiration {
-      noncurrent_days = 90
-    }
-
-    noncurrent_version_transition {
-      noncurrent_days = 30
-      storage_class   = "STANDARD_IA"
-    }
-
-    noncurrent_version_transition {
-      noncurrent_days = 60
-      storage_class   = "GLACIER"
-    }
-
-    status = "Enabled"
-  }
-}
-
-# Step 9: S3 Bucket logging, Store the server log generated by another bucket
-resource "aws_s3_bucket" "log_bucket" {
-  # Ensure this bucket is created after the devops_buckets
-  depends_on = [aws_s3_bucket.devops_buckets]
-  bucket = var.log_bucket_name
   tags = {
-    Name        = "My log bucket"
-    Environment = var.env_name
+    Terraform   = "true"
+    Environment = var.environment
   }
-}
-
-resource "aws_s3_bucket_logging" "s3_bucket_logging_config" {
-  # Ensure logging configuration is applied after log_bucket is created
-  depends_on = [aws_s3_bucket.log_bucket]
-
-  bucket = aws_s3_bucket.devops_buckets.id
-  target_bucket = aws_s3_bucket.log_bucket.id
-  target_prefix = "log/"
-}
-
-# Step 10 : Object locking in s3
-resource "aws_s3_bucket_object_lock_configuration" "s3_bucket_object_lock_config" {
-  bucket = aws_s3_bucket.devops_buckets.id
-
-  depends_on = [ aws_s3_bucket_versioning.bucket_versioning ]
-
-  rule {
-    default_retention {
-      mode = "COMPLIANCE"
-      days = 1
-    }
-  }
-}
-
-# Step 11: Output the Bucket Name and URL
-output "bucket_name" {
-  value = aws_s3_bucket.devops_buckets.bucket
-}
-
-# Step Output the Bucket Name and URL
-output "log_bucket_name" {
-  value = aws_s3_bucket.log_bucket.bucket
 }
