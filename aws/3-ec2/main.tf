@@ -69,6 +69,7 @@ module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
   name                        = var.ec2_name
+  ami                         = var.ami
   create_security_group       = false
   vpc_security_group_ids      = [module.web_service_sg.security_group_id]
   instance_type               = var.instance_type

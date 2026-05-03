@@ -24,3 +24,4 @@ private_subnets = [
 ec2_name      = "single-instance"
 instance_type = "t3a.medium"
 key_name      = "nasir-us-east-2-key"
+ami           = ""

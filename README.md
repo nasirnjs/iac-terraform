@@ -172,8 +172,10 @@ resource "aws_s3_bucket" "logs" {
 ## 6. Resources, Arguments, Attributes & Meta-Arguments
 
 ### Resource
-A block that creates and manages a piece of infrastructure.
+It represents a real infrastructure object that Terraform will create, update, or delete.
 
+Examples include:
+- Virtual machines (EC2, Compute Engine, Azure VM)
 ```hcl
 resource "aws_instance" "example" {
   ami           = "ami-0c55b159cbfafe1f0"

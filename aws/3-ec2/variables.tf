@@ -34,6 +34,10 @@ variable "ec2_name" {
   description = "Name of the VPC"
   type        = string
 }
+variable "ami" {
+  description = "Name of the OS AMI"
+  type        = string
+}
 variable "instance_type" {
   description = "Name of the VPC"
   type        = string
