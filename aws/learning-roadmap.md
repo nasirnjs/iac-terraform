@@ -41,7 +41,7 @@ A structured, end-to-end Terraform learning path on AWS—from beginner fundamen
 25. Security Groups with EC2
 26. Network ACLs (NACLs)
 27. VPC Peering
-28. Site-to-Site VPN (VGW and CGW)
+28. 
 29. AWS Transit Gateway
 30. VPC Endpoints (Gateway and Interface)
 31. Elastic IP and Elastic Network Interface (ENI)
