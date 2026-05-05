@@ -57,7 +57,7 @@ module "web_service_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["https-443-tcp", "http-80-tcp"]
+  ingress_rules       = ["ssh-tcp", "https-443-tcp", "http-80-tcp"]
 
   egress_cidr_blocks = ["0.0.0.0/0"]
   egress_rules       = ["all-all"]
@@ -83,32 +83,23 @@ module "ec2_instance" {
     size                  = var.root_disk_size
     delete_on_termination = true
   }
-  # Data Disk
+  # Data Disk - With DLM Backup
   ebs_volumes = {
     data_disk = {
       device_name = "/dev/sdf"
       size        = var.data_disk_size
       type        = "gp3"
       delete_on_termination = true
+      tags = {
+        Name         = "${var.ec2_name}-data"
+        BackupPolicy = "daily-7days"      # ← This triggers DLM backup
+      }
     }
   }
-  # User Data Sections
-  user_data = <<-EOF
-  #!/bin/bash
-  set -euxo pipefail
 
-  echo "Starting user data..." > /var/log/userdata.log
-
-  apt-get update -y
-  apt-get install -y nginx
-
-  systemctl enable nginx
-  systemctl start nginx
-
-  echo "<h1>Hello from Terraform EC2</h1>" > /var/www/html/index.html
-
-  echo "Completed successfully" >> /var/log/userdata.log
-  EOF
+  # Use external user data file
+  user_data                   = file("${path.module}/scripts/mount-data-volume.sh")
+  user_data_replace_on_change = true   # Recommended
 
   tags = {
     Terraform   = "true"
