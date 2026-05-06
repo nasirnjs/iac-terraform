@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
-# EC2 instances — static targets behind the ALB
+# EC2 instances — static targets behind the NLB
 # ----------------------------------------------------------------------------
-module "ec2_web" {
+module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "6.4.0"
 
@@ -28,11 +28,11 @@ module "ec2_web" {
     #!/bin/bash
     set -euxo pipefail
     apt-get update -y
-    apt-get install -y nginx curl
+    apt-get install -y nginx
     systemctl enable nginx
     systemctl start nginx
     TOKEN=$(curl -sS -X PUT "http://169.254.169.254/latest/api/token" \
-      -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+      -H "X-aws-ec2-metadata-token-ttl-seconds: 60")
     INSTANCE_ID=$(curl -sS -H "X-aws-ec2-metadata-token: $TOKEN" \
       http://169.254.169.254/latest/meta-data/instance-id)
     echo "<h1>Hello from $INSTANCE_ID</h1>" > /var/www/html/index.html
@@ -44,10 +44,13 @@ module "ec2_web" {
   }
 }
 
+# ----------------------------------------------------------------------------
+# Attach EC2 instances to the NLB target group
+# ----------------------------------------------------------------------------
 resource "aws_lb_target_group_attachment" "web" {
   count = var.instance_count
 
-  target_group_arn = module.alb.target_groups["web-tg"].arn
-  target_id        = module.ec2_web[count.index].id
+  target_group_arn = module.nlb.target_groups["web-tg"].arn
+  target_id        = module.ec2_instance[count.index].id
   port             = 80
 }

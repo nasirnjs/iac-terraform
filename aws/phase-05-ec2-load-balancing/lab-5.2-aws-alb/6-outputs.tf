@@ -15,10 +15,10 @@ output "app_url" {
 
 output "web_instance_ids" {
   description = "IDs of the web EC2 instances behind the ALB"
-  value       = aws_instance.web[*].id
+  value       = module.ec2_web[*].id
 }
 
 output "web_instance_private_ips" {
   description = "Private IPs of the web EC2 instances"
-  value       = aws_instance.web[*].private_ip
+  value       = module.ec2_web[*].private_ip
 }
