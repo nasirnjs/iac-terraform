@@ -51,6 +51,8 @@ module "vpc" {
 
 module "web_service_sg" {
   source = "terraform-aws-modules/security-group/aws"
+  version = "5.3.1"
+  
 
   name        = "web-service"
   description = "Security group for user-service with custom ports open within VPC, and PostgreSQL publicly open"
