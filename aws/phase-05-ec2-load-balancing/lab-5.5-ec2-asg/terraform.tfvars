@@ -22,6 +22,18 @@ private_subnets = [
 
 instance_type  = "t3a.medium"
 key_name       = "nasir-us-east-2-key"
-ami            = "ami-0fe18bc3cfa53a248"
+ami            = "ami-05ee577e8ba991681"
 root_disk_size = 20
-instance_count = 2
+
+# Auto Scaling Group
+asg_min_size         = 2
+asg_max_size         = 4
+asg_desired_capacity = 2
+asg_cpu_target       = 60
+
+# DNS / TLS
+domain_name               = "nasirtechtalks.com"
+route53_zone_name         = "nasirtechtalks.com"
+subject_alternative_names = ["www.nasirtechtalks.com"]
+create_acm_certificate    = true
+#acm_certificate_arn = "arn:aws:acm:ap-southeast-1:123456789012:certificate/xxxxxx"
