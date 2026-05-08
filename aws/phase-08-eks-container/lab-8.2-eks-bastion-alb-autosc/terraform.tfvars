@@ -15,3 +15,9 @@ node_instance_types = ["t3a.medium"]
 desired_size        = 1
 min_size            = 1
 max_size            = 4
+
+bastion_instance_type = "t2.micro"
+# Ubuntu 24.04 LTS (Noble) amd64, gp3, in us-east-2 — Canonical build 20260507
+bastion_ami_id       = "ami-02313bf7c0d264d2c"
+bastion_key_name     = "nasir-us-east-2-key"
+bastion_allowed_cidr = "118.179.44.109/32"

@@ -6,6 +6,7 @@ module "eks" {
   kubernetes_version = var.cluster_version
 
   endpoint_public_access                   = true
+  endpoint_private_access                  = true
   enable_cluster_creator_admin_permissions = true
 
   # EKS Addons
@@ -34,8 +35,33 @@ module "eks" {
     }
   }
 
+  # Grant the bastion IAM role cluster-admin via EKS access entry
+  access_entries = {
+    bastion = {
+      principal_arn = module.bastion.iam_role_arn
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
   tags = {
     Environment = var.environment
     Project     = var.project_name
   }
+}
+
+# Allow the bastion to reach the EKS private API endpoint (HTTPS 443)
+resource "aws_vpc_security_group_ingress_rule" "eks_api_from_bastion" {
+  security_group_id            = module.eks.cluster_security_group_id
+  referenced_security_group_id = aws_security_group.bastion.id
+  ip_protocol                  = "tcp"
+  from_port                    = 443
+  to_port                      = 443
+  description                  = "Bastion to EKS API"
 }
