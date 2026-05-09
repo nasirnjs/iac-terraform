@@ -9,17 +9,15 @@ Provision an Amazon RDS for PostgreSQL instance inside a custom VPC, with an EC2
 - [terraform-aws-modules/security-group/aws](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/latest)
 - [terraform-aws-modules/ec2-instance/aws](https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest)
 
-## What gets created
 
-- VPC with public + private subnets across 3 AZs, IGW, NAT Gateway, route tables
-- EC2 instance (`t3a.medium`, Ubuntu) in a public subnet with nginx user-data
-- Two security groups
-  - `web-service` — 22/80/443 from internet
-  - `rds-postgresql-sg` — 5432 from web SG and from `db_allowed_cidr`
-- RDS PostgreSQL 16
-  - `db.t4g.micro`, gp3 20 GiB, encrypted at rest
-  - Private subnets only, `publicly_accessible = false`
-  - Custom parameter group `<identifier>-pg` with `max_connections` and `log_min_duration_statement`
-  - Master password supplied via write-only attribute (`password_wo`) — not stored in state
+## Connect Securely to Amazon RDS PostgreSQL Using SSL from Ubuntu
+```
+# Download AWS RDS SSL Certificate Bundle
+curl -o global-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 
+# Set RDS Endpoint
+export RDSHOST="prod-postgresql.cdmqiqkkubo9.us-east-2.rds.amazonaws.com"
 
+# Connect Securely to PostgreSQL RDS
+psql "host=$RDSHOST port=5432 dbname=appdb user=postgres sslmode=verify-full sslrootcert=./global-bundle.pem"
+```

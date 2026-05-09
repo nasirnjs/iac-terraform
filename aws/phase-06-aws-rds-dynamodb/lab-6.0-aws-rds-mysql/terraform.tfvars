@@ -26,11 +26,13 @@ instance_type  = "t3a.medium"
 key_name       = "nasir-us-east-2-key"
 ami            = "ami-0fe18bc3cfa53a248"
 root_disk_size = "20"
-data_disk_size = "20"
 
 # RDS MySQL
-db_identifier        = "prod-mysql"
-db_engine_version    = "8.4"
+db_identifier            = "prod-mysql"
+db_engine                = "mysql"
+db_engine_version        = "8.4.3"
+db_family                = "mysql8.4"
+db_major_engine_version  = "8.4"
 db_instance_class    = "db.t4g.micro"
 db_allocated_storage = 20
 db_name              = "appdb"

@@ -50,10 +50,6 @@ variable "root_disk_size" {
   description = "Name of the VPC"
   type        = string
 }
-variable "data_disk_size" {
-  description = "Name of the VPC"
-  type        = string
-}
 
 # RDS MySQL
 variable "db_identifier" {
@@ -61,8 +57,23 @@ variable "db_identifier" {
   type        = string
 }
 
+variable "db_engine" {
+  description = "RDS engine (e.g., mysql)"
+  type        = string
+}
+
 variable "db_engine_version" {
   description = "MySQL engine version"
+  type        = string
+}
+
+variable "db_family" {
+  description = "RDS parameter group family (e.g., mysql8.4)"
+  type        = string
+}
+
+variable "db_major_engine_version" {
+  description = "RDS major engine version (e.g., 8.4)"
   type        = string
 }
 

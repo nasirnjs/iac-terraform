@@ -29,13 +29,25 @@ root_disk_size = "20"
 data_disk_size = "20"
 
 # RDS PostgreSQL
-db_identifier        = "prod-postgresql"
-db_engine_version    = "16.13"
-db_instance_class    = "db.t4g.micro"
-db_allocated_storage = 20
-db_name              = "appdb"
-db_username          = "postgres"
-db_password          = "ChangeMeStrongPwd123!"
-db_password_version  = 1
-db_max_connections   = 200
-db_allowed_cidr      = "10.0.0.0/16"
+db_identifier           = "prod-postgresql"
+db_engine_version       = "18.2"
+db_family               = "postgres18"
+db_major_engine_version = "18"
+db_instance_class       = "db.t4g.micro"
+db_allocated_storage    = 20
+db_name                 = "appdb"
+db_username             = "postgres"
+db_password             = "ChangeMeStrongPwd123!"
+db_password_version     = 1
+db_max_connections      = 200
+db_allowed_cidr         = "10.0.0.0/16"
+
+# Template: production | dev-test | sandbox
+db_template                = "dev-test"
+db_deletion_protection     = false
+db_backup_retention_period = 7
+
+# Read Replica
+db_create_read_replica         = true
+db_read_replica_count          = 1
+db_read_replica_instance_class = null

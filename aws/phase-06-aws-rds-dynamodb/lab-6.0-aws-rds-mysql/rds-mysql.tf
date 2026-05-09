@@ -4,10 +4,10 @@ module "rds_mysql" {
 
   identifier = var.db_identifier
 
-  engine               = "mysql"
+  engine               = var.db_engine
   engine_version       = var.db_engine_version
-  family               = "mysql8.4"
-  major_engine_version = "8.4"
+  family               = var.db_family
+  major_engine_version = var.db_major_engine_version
   instance_class       = var.db_instance_class
 
   allocated_storage = var.db_allocated_storage
