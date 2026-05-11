@@ -5,32 +5,77 @@ A practical, end-to-end reference for learning Terraform — from first `terrafo
 
 ## Table of Contents
 
-1. [Why Terraform?](#1-why-terraform)
-2. [Installing Terraform](#2-installing-terraform)
-3. [HCL Syntax Basics](#3-hcl-syntax-basics)
-4. [Top-Level Blocks](#4-top-level-blocks)
-5. [Providers](#5-providers)
-6. [Resources, Arguments, Attributes & Meta-Arguments](#6-resources-arguments-attributes--meta-arguments)
-7. [Variables](#7-variables)
-8. [Outputs](#8-outputs)
-9. [Locals](#9-locals)
-10. [Data Sources](#10-data-sources)
-11. [Expressions, Operators & Functions](#11-expressions-operators--functions)
-12. [Meta-Arguments Deep Dive](#12-meta-arguments-deep-dive)
-13. [Dynamic Blocks](#13-dynamic-blocks)
-14. [Modules](#14-modules)
-15. [Dependencies](#15-dependencies)
-16. [Lifecycle Rules](#16-lifecycle-rules)
-17. [Mutable vs Immutable Infrastructure](#17-mutable-vs-immutable-infrastructure)
-18. [Terraform State](#18-terraform-state)
-19. [Remote Backends](#19-remote-backends)
-20. [Workspaces](#20-workspaces)
-21. [Provisioners](#21-provisioners)
-22. [Import & Moved Blocks](#22-import--moved-blocks)
-23. [Sensitive Data & Secrets](#23-sensitive-data--secrets)
-24. [Variable Validation & Preconditions](#24-variable-validation--preconditions)
-25. [Common Commands Reference](#25-common-commands-reference)
-26. [Best Practices](#26-best-practices)
+- [Table of Contents](#table-of-contents)
+- [1. Why Terraform?](#1-why-terraform)
+- [2. Installing Terraform](#2-installing-terraform)
+- [3. HCL Syntax Basics](#3-hcl-syntax-basics)
+  - [Configuration Components](#configuration-components)
+  - [General Block Form](#general-block-form)
+  - [Comments](#comments)
+  - [Data Types](#data-types)
+- [4. Top-Level Blocks](#4-top-level-blocks)
+- [5. Providers](#5-providers)
+  - [Multiple Provider Instances (Aliases)](#multiple-provider-instances-aliases)
+- [6. Resources, Arguments, Attributes \& Meta-Arguments](#6-resources-arguments-attributes--meta-arguments)
+  - [Resource](#resource)
+  - [Arguments (Inputs)](#arguments-inputs)
+  - [Attributes (Outputs)](#attributes-outputs)
+  - [Meta-Arguments (Behavior Control)](#meta-arguments-behavior-control)
+- [7. Variables](#7-variables)
+  - [Declaring](#declaring)
+  - [Using](#using)
+  - [Five Ways to Set Variable Values](#five-ways-to-set-variable-values)
+  - [Sensitive \& Nullable](#sensitive--nullable)
+- [8. Outputs](#8-outputs)
+- [9. Locals](#9-locals)
+- [10. Data Sources](#10-data-sources)
+- [11. Expressions, Operators \& Functions](#11-expressions-operators--functions)
+  - [References](#references)
+  - [Conditionals](#conditionals)
+  - [Splat Expression](#splat-expression)
+  - [For Expressions](#for-expressions)
+  - [Common Built-in Functions](#common-built-in-functions)
+- [12. Meta-Arguments Deep Dive](#12-meta-arguments-deep-dive)
+  - [`count` — Numeric Repetition](#count--numeric-repetition)
+  - [`for_each` — Map/Set Iteration (preferred for stable identity)](#for_each--mapset-iteration-preferred-for-stable-identity)
+  - [`depends_on` — Explicit Dependency](#depends_on--explicit-dependency)
+  - [`provider` — Use a Non-Default Provider Instance](#provider--use-a-non-default-provider-instance)
+- [13. Dynamic Blocks](#13-dynamic-blocks)
+- [14. Modules](#14-modules)
+  - [Calling a Module](#calling-a-module)
+  - [Module Sources](#module-sources)
+  - [Module Structure](#module-structure)
+  - [Why Modules](#why-modules)
+- [15. Dependencies](#15-dependencies)
+  - [Implicit (preferred)](#implicit-preferred)
+  - [Explicit (`depends_on`)](#explicit-depends_on)
+- [16. Lifecycle Rules](#16-lifecycle-rules)
+  - [`create_before_destroy`](#create_before_destroy)
+  - [`prevent_destroy`](#prevent_destroy)
+  - [`ignore_changes`](#ignore_changes)
+  - [`replace_triggered_by`](#replace_triggered_by)
+  - [`precondition` / `postcondition`](#precondition--postcondition)
+- [17. Mutable vs Immutable Infrastructure](#17-mutable-vs-immutable-infrastructure)
+  - [Mutable](#mutable)
+  - [Immutable](#immutable)
+  - [When to Choose](#when-to-choose)
+- [18. Terraform State](#18-terraform-state)
+  - [State Commands](#state-commands)
+- [19. Remote Backends](#19-remote-backends)
+  - [S3 + DynamoDB (AWS)](#s3--dynamodb-aws)
+  - [Other Backends](#other-backends)
+  - [Key Properties](#key-properties)
+- [20. Workspaces](#20-workspaces)
+- [21. Provisioners](#21-provisioners)
+- [22. Import \& Moved Blocks](#22-import--moved-blocks)
+  - [Importing Existing Resources](#importing-existing-resources)
+  - [`moved` Blocks — Refactor Without Recreation](#moved-blocks--refactor-without-recreation)
+- [23. Sensitive Data \& Secrets](#23-sensitive-data--secrets)
+- [24. Variable Validation \& Preconditions](#24-variable-validation--preconditions)
+- [25. Common Commands Reference](#25-common-commands-reference)
+  - [Render the Dependency Graph](#render-the-dependency-graph)
+- [26. Best Practices](#26-best-practices)
+  - [References](#references-1)
 
 ---
 
@@ -402,9 +447,6 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
-### `lifecycle` — See [Section 16](#16-lifecycle-rules)
-
----
 
 ## 13. Dynamic Blocks
 
@@ -425,8 +467,6 @@ resource "aws_security_group" "web" {
   }
 }
 ```
-
----
 
 ## 14. Modules
 
@@ -452,16 +492,40 @@ module "vpc" {
 ### Module Structure
 ```
 terraform-project/
-├── main.tf            # Main infrastructure resources
-├── provider.tf        # Provider configuration (AWS/GCP/Azure)
-├── variables.tf       # Input variable declarations
-├── terraform.tfvars   # Variable values
-├── outputs.tf         # Output values
-├── backend.tf         # Remote backend configuration
-├── locals.tf          # Local variables and expressions
-├── data.tf            # Data source definitions
-├── modules/           # Reusable Terraform modules
-└── README.md		       # Is the main documentation file of your Terraform project
+├── main.tf                # Main infrastructure resources (root module entry point)
+├── provider.tf           # Provider configuration (AWS/GCP/Azure)
+├── variables.tf          # Input variable declarations
+├── terraform.tfvars      # Variable values
+├── outputs.tf            # Output values
+├── backend.tf           # Remote backend configuration
+├── locals.tf            # Local variables and expressions
+├── data.tf              # Data source definitions
+├── versions.tf          # Terraform & provider version constraints
+├── README.md            # Project documentation
+├── modules/             # Reusable Terraform modules
+   ├── vpc/
+   │   ├── main.tf
+   │   ├── variables.tf
+   │   ├── outputs.tf
+   │   └── README.md
+   │
+   ├── ec2/
+   │   ├── main.tf
+   │   ├── variables.tf
+   │   ├── outputs.tf
+   │   └── README.md
+   │
+   ├── s3/
+   │   ├── main.tf
+   │   ├── variables.tf
+   │   ├── outputs.tf
+   │   └── README.md
+   │
+   └── rds/
+       ├── main.tf
+       ├── variables.tf
+       ├── outputs.tf
+       └── README.md
 ```
 
 ### Why Modules
@@ -470,7 +534,6 @@ terraform-project/
 - Consistent infrastructure patterns
 - Easier review and testing
 
----
 
 ## 15. Dependencies
 
@@ -550,8 +613,6 @@ lifecycle {
 
 > Note: Terraform does **not** have `pre_destroy` or `post_destroy` hooks. Use a `null_resource` with a `local-exec` provisioner and `when = destroy` if you need pre-destroy actions.
 
----
-
 ## 17. Mutable vs Immutable Infrastructure
 
 ### Mutable
@@ -583,7 +644,6 @@ In `terraform plan`, immutable changes are marked `-/+` (destroy then create).
 - **Mutable:** legacy systems, expensive recreation, stateful workloads.
 - **Immutable:** cloud-native, autoscaling, predictable rollouts. Generally preferred.
 
----
 
 ## 18. Terraform State
 
@@ -608,7 +668,6 @@ terraform state rm <addr>                     # remove from state (does not dest
 terraform state replace-provider <old> <new>  # change provider source
 ```
 
----
 
 ## 19. Remote Backends
 
