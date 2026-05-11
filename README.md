@@ -2,7 +2,6 @@
 
 A practical, end-to-end reference for learning Terraform — from first `terraform init` to advanced patterns like dynamic blocks, remote state, and module composition.
 
----
 
 ## Table of Contents
 
@@ -84,6 +83,17 @@ block_type "label1" "label2" {
 
   nested_block {
     nested_arg = value
+  }
+}
+```
+
+```hcl
+resource "aws_instance" "web" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+
+  root_block_device {
+    volume_size = 20
   }
 }
 ```
@@ -441,12 +451,17 @@ module "vpc" {
 
 ### Module Structure
 ```
-modules/vpc/
-├── main.tf       # resources
-├── variables.tf  # inputs
-├── outputs.tf    # outputs
-├── versions.tf   # required providers/versions
-└── README.md
+terraform-project/
+├── main.tf            # Main infrastructure resources
+├── provider.tf        # Provider configuration (AWS/GCP/Azure)
+├── variables.tf       # Input variable declarations
+├── terraform.tfvars   # Variable values
+├── outputs.tf         # Output values
+├── backend.tf         # Remote backend configuration
+├── locals.tf          # Local variables and expressions
+├── data.tf            # Data source definitions
+├── modules/           # Reusable Terraform modules
+└── README.md		       # Is the main documentation file of your Terraform project
 ```
 
 ### Why Modules
@@ -623,7 +638,6 @@ terraform {
 - **Versioning** (S3 / GCS) enables recovery from bad state.
 - **Encryption** at rest is essential — state often contains secrets.
 
----
 
 ## 20. Workspaces
 
@@ -645,7 +659,6 @@ resource "aws_s3_bucket" "data" {
 
 > For strong environment isolation (different backends, different credentials), prefer **separate root modules with distinct backend configs** over CLI workspaces.
 
----
 
 ## 21. Provisioners
 
@@ -666,8 +679,6 @@ resource "aws_instance" "web" {
 ```
 
 Types: `local-exec`, `remote-exec`, `file`. Connection details go in a `connection` block.
-
----
 
 ## 22. Import & Moved Blocks
 
@@ -701,8 +712,6 @@ moved {
 }
 ```
 
----
-
 ## 23. Sensitive Data & Secrets
 
 - Mark variables and outputs as `sensitive = true` to redact from CLI output.
@@ -715,8 +724,6 @@ moved {
   ```
 - Encrypt remote state (KMS on S3, CMEK on GCS).
 - Restrict who can read state — it contains every attribute, including secrets.
-
----
 
 ## 24. Variable Validation & Preconditions
 
@@ -739,8 +746,6 @@ variable "instance_count" {
 ```
 
 Preconditions/postconditions inside `lifecycle` (see [Section 16](#16-lifecycle-rules)) catch invariants between resources.
-
----
 
 ## 25. Common Commands Reference
 
@@ -774,7 +779,6 @@ sudo apt install graphviz -y
 terraform graph | dot -Tsvg > graph.svg
 ```
 
----
 
 ## 26. Best Practices
 
@@ -810,7 +814,6 @@ terraform graph | dot -Tsvg > graph.svg
 - Never commit secrets. Use environment variables, secret managers, or sensitive variables.
 - Treat state files as secrets.
 
----
 
 ### References
 - [Terraform Language Documentation](https://developer.hashicorp.com/terraform/language)
