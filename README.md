@@ -43,7 +43,6 @@ A practical, end-to-end reference for learning Terraform — from first `terrafo
 - [13. Dynamic Blocks](#13-dynamic-blocks)
 - [14. Modules](#14-modules)
   - [Calling a Module](#calling-a-module)
-  - [Module Sources](#module-sources)
   - [Module Structure](#module-structure)
   - [Why Modules](#why-modules)
 - [15. Dependencies](#15-dependencies)
@@ -483,11 +482,6 @@ module "vpc" {
 }
 ```
 
-### Module Sources
-- Local path: `./modules/vpc`
-- Terraform Registry: `terraform-aws-modules/vpc/aws`
-- Git: `git::https://github.com/org/repo.git//modules/vpc?ref=v1.2.0`
-- S3, GCS, HTTP archives
 
 ### Module Structure
 ```
