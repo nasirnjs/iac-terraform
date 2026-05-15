@@ -15,6 +15,7 @@ node_instance_types = ["t3a.medium"]
 desired_size        = 1
 min_size            = 1
 max_size            = 4
+node_group_ami_type = "AL2023_x86_64_STANDARD"
 
 bastion_instance_type = "t2.micro"
 # Ubuntu 24.04 LTS (Noble) amd64, gp3, in us-east-2 — Canonical build 20260507

@@ -1,11 +1,12 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 21.18.0"
+  version = "~> 21.20.0"
 
   name               = var.cluster_name
   kubernetes_version = var.cluster_version
 
   endpoint_public_access                   = true
+  endpoint_public_access_cidrs             = var.public_access_cidrs
   enable_cluster_creator_admin_permissions = true
 
   # EKS Addons
@@ -32,6 +33,11 @@ module "eks" {
       max_size       = var.max_size
       desired_size   = var.desired_size
     }
+  }
+
+  # Tag the cluster security group so Karpenter can auto-discover it.
+  node_security_group_tags = {
+    "karpenter.sh/discovery" = var.cluster_name
   }
 
   tags = {

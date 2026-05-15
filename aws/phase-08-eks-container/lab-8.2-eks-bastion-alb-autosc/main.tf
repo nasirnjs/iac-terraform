@@ -28,7 +28,7 @@ module "eks" {
     default = {
       name           = "eks-worker-group"
       instance_types = var.node_instance_types
-      ami_type       = "AL2023_x86_64_STANDARD"
+      ami_type       = var.node_group_ami_type
       min_size       = var.min_size
       max_size       = var.max_size
       desired_size   = var.desired_size

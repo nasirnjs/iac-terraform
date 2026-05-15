@@ -49,6 +49,10 @@ variable "node_instance_types" {
   type        = list(string)
 }
 
+variable "node_group_ami_type" {
+  description = "EC2 instance type for the bastion host"
+  type        = string
+}
 variable "desired_size" {
   description = "Desired node count"
   type        = number

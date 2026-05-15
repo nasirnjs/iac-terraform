@@ -64,10 +64,14 @@ variable "max_size" {
   type        = number
 }
 
+variable "node_group_ami_type" {
+  description = "EC2 instance type for the bastion host"
+  type        = string
+}
+
 variable "bastion_instance_type" {
   description = "EC2 instance type for the bastion host"
   type        = string
-  default     = "t2.micro"
 }
 
 variable "bastion_ami_id" {
